@@ -19,9 +19,6 @@ export class TicTacToe {
       this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
 
       this.winner = this.checkWinner();
-      // if (this.winner) {
-      //   alert(`Player ${this.winner} wins!`);
-      // }
     }
   }
 

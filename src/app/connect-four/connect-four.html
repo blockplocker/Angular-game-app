@@ -1,1 +1,14 @@
-<p>connect-four works!</p>
+<h2>Connect Four</h2>
+<div class="connect-four-board player-yellow" #boardRef>
+    @for (row of [0,1,2,3,4,5]; track row) {
+    <div class="cf-row">
+        @for (col of [0,1,2,3,4,5,6]; track col) {
+        <div class="cf-cell {{ board[row][col] }}" (click)="placePiece(col)"></div>
+        }
+    </div>
+    }
+    @if(winner) {
+    <h3 class="winner-message ">{{ winner }} wins!</h3>
+    <button (click)="resetGame()">Reset Game</button>
+    }
+</div>

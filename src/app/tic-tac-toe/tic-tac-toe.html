@@ -8,21 +8,13 @@
 }
 <div class="tic-tac-toe">
     <div class="board">
-        <div class="row">
-            <div class="cell" appHighlightWinnerTicTacToe [iswinningCombination]="!!winningCombination?.includes(0)" (click)="makeMove(0)">{{ board[0] }}</div>
-            <div class="cell" appHighlightWinnerTicTacToe [iswinningCombination]="!!winningCombination?.includes(1)" (click)="makeMove(1)">{{ board[1] }}</div>
-            <div class="cell" appHighlightWinnerTicTacToe [iswinningCombination]="!!winningCombination?.includes(2)" (click)="makeMove(2)">{{ board[2] }}</div>
-        </div>
-        <div class="row">
-            <div class="cell" appHighlightWinnerTicTacToe [iswinningCombination]="!!winningCombination?.includes(3)" (click)="makeMove(3)">{{ board[3] }}</div>
-            <div class="cell" appHighlightWinnerTicTacToe [iswinningCombination]="!!winningCombination?.includes(4)" (click)="makeMove(4)">{{ board[4] }}</div>
-            <div class="cell" appHighlightWinnerTicTacToe [iswinningCombination]="!!winningCombination?.includes(5)" (click)="makeMove(5)">{{ board[5] }}</div>
-        </div>
-        <div class="row">
-            <div class="cell" appHighlightWinnerTicTacToe [iswinningCombination]="!!winningCombination?.includes(6)" (click)="makeMove(6)">{{ board[6] }}</div>
-            <div class="cell" appHighlightWinnerTicTacToe [iswinningCombination]="!!winningCombination?.includes(7)" (click)="makeMove(7)">{{ board[7] }}</div>
-            <div class="cell" appHighlightWinnerTicTacToe [iswinningCombination]="!!winningCombination?.includes(8)" (click)="makeMove(8)">{{ board[8] }}</div>
-        </div>
+        @for (i of [0, 1, 2]; track i) {
+            <div class="row">
+                @for (j of [0, 1, 2]; track j){
+                    <div class="cell" appHighlightWinnerTicTacToe [iswinningCombination]="!!winningCombination?.includes(i*3+j)" (click)="makeMove(i*3+j)">{{ board[i*3+j] }}</div>
+                }
+            </div>
+        } 
     </div>
     <button (click)="resetGame()">Reset</button>
 </div>
