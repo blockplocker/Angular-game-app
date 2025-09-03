@@ -1,0 +1,29 @@
+// Modern dark theme for counter component
+:host {
+  display: block;
+  background: #23272f;
+  color: #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+p {
+  font-size: 1.2rem;
+  color: #ffb74d;
+  margin-bottom: 1rem;
+}
+button {
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  margin: 0 0.3rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background: #1976d2;
+}

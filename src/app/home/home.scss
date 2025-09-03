@@ -1,0 +1,37 @@
+// Modern dark theme for home page
+:host {
+  display: block;
+  background: #181a20;
+  color: #e3e3e3;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+input {
+//   margin-top: 1rem;
+  background: #23272f;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1.1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+input:focus {
+  border-color: #1976d2;
+}
+
+p {
+  margin-top: 2rem;
+  font-size: 1.3rem;
+  color: #90caf9;
+  background: linear-gradient(90deg, #23272f 60%, #1976d2 100%);
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
+  letter-spacing: 2px;
+  text-align: center;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  transition: background 0.3s, color 0.3s;
+}
