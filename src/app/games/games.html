@@ -1,0 +1,8 @@
+<h2>Games</h2>
+
+<div class="games-grid">
+    @for (game of games(); track game.id) {
+        <app-game [game]="game"></app-game>
+    }
+
+</div>

@@ -9,5 +9,12 @@ export const routes: Routes = [
     }, },
     { path: 'tic-tac-toe', pathMatch: 'full', loadComponent() {
         return import('./tic-tac-toe/tic-tac-toe').then(m => m.TicTacToe);
+    }, },
+    { path: 'connect-four', pathMatch: 'full', loadComponent() {
+        return import('./connect-four/connect-four').then(m => m.ConnectFour);
+    }, },
+    { path: 'games', pathMatch: 'full', loadComponent() {
+        return import('./games/games').then(m => m.Games);
     }, }
+
 ];
