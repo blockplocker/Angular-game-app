@@ -21,6 +21,18 @@ export class Games {
       title: 'Connect Four',
       image: 'https://mathworld.wolfram.com/images/gifs/connect4.gif',
       link: '/connect-four'
+    },
+    {
+      id: 2,
+      title: 'Snake',
+      image: 'https://www.coolmathgames.com/sites/default/files/2023-01/History%20of%20Snake%20Game%20Gameplay.gif',
+      link: '/snake'
+    },
+    {
+      id: 3,
+      title: 'Minesweeper',
+      image: 'https://raw.githubusercontent.com/Pierre-Monier/minesweeper/master/docs/demo.gif',
+      link: '/minesweeper'
     }
   ]);
 

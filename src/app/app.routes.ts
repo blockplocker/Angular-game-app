@@ -15,6 +15,12 @@ export const routes: Routes = [
     }, },
     { path: 'games', pathMatch: 'full', loadComponent() {
         return import('./games/games').then(m => m.Games);
+    }, },
+    { path: 'snake', pathMatch: 'full', loadComponent() {
+            return import('./snake/snake').then(m => m.Snake);
+    }, },
+    { path: 'minesweeper', pathMatch: 'full', loadComponent() {
+            return import('./minesweeper/minesweeper').then(m => m.Minesweeper);
     }, }
 
-];
+    ];

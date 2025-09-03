@@ -43,16 +43,20 @@ h2 {
   justify-content: center;
   transition: background 0.2s, border 0.2s;
 }
-.player-yellow .cf-row .cf-cell:hover {
-    background: #ff9900;
-    border-color: #1976d2;
+.cf-cell:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+  transition: transform 0.2s;
+}
+.player-red .cf-row .cf-cell:hover {
+    background: #ff0000;
 }
 .player-blue .cf-row .cf-cell:hover {
-    background: #1976d2;
-    border-color: #f9b145;
+    background: #0080ff;
+    border-color: #1b2eff;
 }
-.yellow {
-    background: #ffb74d;
+.red {
+    background: #ff4d4d;
 }
 .blue {
     background: #42a5f5;

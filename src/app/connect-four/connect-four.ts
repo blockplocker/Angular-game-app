@@ -8,7 +8,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 })
 export class ConnectFour {
   board: string[][] = [];
-  currentPlayer: string = 'yellow';
+  currentPlayer: string = 'red';
   winner: string | null = null;
   @ViewChild('boardRef') boardElement!: ElementRef;
 
@@ -22,17 +22,17 @@ export class ConnectFour {
   resetGame() {
     this.initializeBoard();
     this.winner = null;
-    this.currentPlayer = 'yellow';
+    this.currentPlayer = 'red';
     this.changeClass();
   }
   switchPlayer() {
-    this.currentPlayer = this.currentPlayer === 'yellow' ? 'blue' : 'yellow';
+    this.currentPlayer = this.currentPlayer === 'red' ? 'blue' : 'red';
     this.changeClass();
   }
   changeClass() {
     const el = this.boardElement.nativeElement;
     
-    el.classList.remove('player-yellow', 'player-blue');
+    el.classList.remove('player-red', 'player-blue');
     el.classList.add(`player-${this.currentPlayer}`);
   }
   placePiece(column: number) {

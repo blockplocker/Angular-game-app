@@ -16,9 +16,7 @@ import { Header } from './components/header/header';
   `,
   styles: [
     `
-      router-outlet {
-        min-height: 93vh;
-      }
+      
     `,
   ],
 })
