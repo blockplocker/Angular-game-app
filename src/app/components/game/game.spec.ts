@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 
 import { Game } from './game';
 
@@ -8,9 +9,9 @@ describe('Game', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Game]
-    })
-    .compileComponents();
+      imports: [Game],
+      providers: [{ provide: ActivatedRoute, useValue: {} }],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Game);
     component = fixture.componentInstance;

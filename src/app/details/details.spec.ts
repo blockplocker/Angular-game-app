@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 
 import { Details } from './details';
 
@@ -8,9 +9,9 @@ describe('Details', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Details]
-    })
-    .compileComponents();
+      imports: [Details],
+      providers: [{ provide: ActivatedRoute, useValue: {} }],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Details);
     component = fixture.componentInstance;

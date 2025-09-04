@@ -1,6 +1,44 @@
+<section class="portfolio-intro">
+    <!-- <h1>👋 Hi, I'm Noa!</h1> -->
+    <app-greeting [message]="homeMessage()"></app-greeting>
+    <p>Welcome to my Angular portfolio page. Here you'll find a showcase of what I've learned while building this
+        Angular
+        app.</p>
+</section>
 
-<app-greeting [message]="homeMessage()"></app-greeting>
-<app-counter></app-counter>
+<section class="portfolio-skills">
+    <h2>🛠️ What I've Learned in Angular</h2>
+    <ul>
+        <li>Component-based architecture</li>
+        <li>Data binding & event handling</li>
+        <li>Services & Dependency Injection</li>
+        <li>Routing & navigation</li>
+        <li>Directives & pipes</li>
+        <li>SCSS styling & theming</li>
+        <li>Unit testing</li>
+        <li>Working with APIs</li>
+    </ul>
+</section>
 
-<p>You pressed {{ inputKey() }}</p>
-<input placeholder="Type something..." type="text" (keyup)="keyupHandler($event)">
+<section class="portfolio-demos">
+    <h2>🎮 Demos</h2>
+    <div class="demos-grid">
+        <a routerLink="/games" class="demo-card">
+            <h3>Games</h3>
+            <p>Explore a collection of fun and interactive games built with Angular.</p>
+        </a>
+        <a routerLink="/houses" class="demo-card">
+            <h3>Housing</h3>
+            <p>Browse housing listings with detailed views and interactive features.</p>
+        </a>
+        <a routerLink="/todos" class="demo-card">
+            <h3>Todos</h3>
+            <p>Manage tasks from an API with this simple todo app.</p>
+        </a>
+    </div>
+</section>
+
+<section class="portfolio-github">
+    <h2>🔗 Find me on GitHub</h2>
+    <a href="https://github.com/blockplocker" target="_blank" class="github-link">Visit my GitHub Profile</a>
+</section>
