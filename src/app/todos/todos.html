@@ -4,7 +4,9 @@
     <p>Loading...</p>
 }
 <section>
-    <input type="text" [(ngModel)]="newTodoTitle" placeholder="New Todo Title">
+    <input name="searchTerm" type="text" placeholder="search todos..." [(ngModel)]="searchTerm"/>
+
+    <input type="text" [(ngModel)]="newTodoTitle" placeholder="add New Todo">
     <button (click)="addTodoItem()">Add Todo Item</button>
 
     <button (click)="clearCompleted()">Clear Completed</button>
@@ -12,7 +14,7 @@
 </section>
 
 <ul>
-    @for (todo of todoitems(); track todo.id) {
+    @for (todo of todoitems() | filterTodos: searchTerm(); track todo.id) {
         <app-todo-item (todotoggled)="updateTodoItem($event)" [todo]="todo"></app-todo-item>
     }
     
