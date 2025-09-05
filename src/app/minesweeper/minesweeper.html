@@ -1,1 +1,33 @@
-<p>minesweeper works!</p>
+<div class="minesweeper">
+    <h2>Minesweeper</h2>
+    <div class="controls">
+        <input type="radio" name="difficulty" id="easy" (change)="setDifficulty('easy')" checked>
+        <label for="easy">Easy</label>
+        <input type="radio" name="difficulty" id="medium" (change)="setDifficulty('medium')">
+        <label for="medium">Medium</label>
+        <input type="radio" name="difficulty" id="hard" (change)="setDifficulty('hard')">
+        <label for="hard">Hard</label>
+        <button (click)="startNewGame()">Restart</button>
+    </div>
+    @if (gameOver) {
+    <h3>Game Over!</h3>
+    }
+    @if (gameWon) {
+    <h3>Congratulations! You Won!</h3>
+    }
+    <div class="board">
+        @for (row of Board; track $index; let i = $index) {
+        <div class="row">
+            @for (cell of row; track $index; let j = $index) {
+            <div class="cell">
+                @if (revealed[i][j]) {
+                <span class="revealed content-{{Board[i][j]}}">{{Board[i][j]}}</span>
+                } @else {
+                <button (click)="revealCell(i, j)"></button>
+                }
+            </div>
+            }
+        </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,130 @@
+:host {
+  display: block;
+  background: #181a20;
+  color: #e3e3e3;
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: 'Fira Sans', 'Segoe UI', sans-serif;
+}
+
+.minesweeper {
+  text-align: center;
+}
+
+h2 {
+  color: #90caf9;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+h3 {
+  color: #3da1f3;
+  font-size: 1.6rem;
+  margin-bottom: 0rem;
+  font-weight: 700;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+.controls input[type='radio'] {
+  accent-color: #1976d2;
+}
+.controls label {
+  color: #e3e3e3;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+.controls button {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.controls button:hover {
+  background: #90caf9;
+  color: #23272f;
+}
+
+.board {
+  display: inline-block;
+  background: #23272f;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(25, 118, 210, 0.15);
+  padding: 1rem;
+  margin-top: 20px;
+}
+.row {
+  display: flex;
+}
+.cell {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #1976d2;
+  background: #181a20;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border 0.2s;
+}
+.cell button {
+  width: 100%;
+  height: 100%;
+  background: #333;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.cell button:hover {
+  background: #1976d2;
+}
+.revealed {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-radius: 6px;
+}
+.content-0 {
+  background: #23272f;
+  color: #b0bec5;
+}
+.content-1 {
+  color: #1976d2;
+}
+.content-2 {
+  color: #43a047;
+}
+.content-3 {
+  color: #e53935;
+}
+.content-4 {
+  color: #1e88e5;
+}
+.content-5 {
+  color: #8d6e63;
+}
+.content-6 {
+  color: #00bcd4;
+}
+.content-7 {
+  color: #212121;
+}
+.content-8 {
+  color: #757575;
+}
