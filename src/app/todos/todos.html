@@ -3,6 +3,13 @@
 @if (!todoitems().length){
     <p>Loading...</p>
 }
+<section>
+    <input type="text" [(ngModel)]="newTodoTitle" placeholder="New Todo Title">
+    <button (click)="addTodoItem()">Add Todo Item</button>
+
+    <button (click)="clearCompleted()">Clear Completed</button>
+
+</section>
 
 <ul>
     @for (todo of todoitems(); track todo.id) {
