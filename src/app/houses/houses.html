@@ -1,11 +1,11 @@
 <section>
     <form>
-        <input type="text" placeholder="Filter by city" #filter>
-        <button class="primary" type="button" (click)="filterResults(filter.value)">Search</button>
+        <input type="text" placeholder="Filter by city..." [ngModel]="filter()" (ngModelChange)="filter.set($event)"
+            name="filter">
     </form>
 </section>
 <section class="results">
-    @for(house of filteredLocationList; track house.id) {
+    @for(house of houseListingList | filterHouseListings: filter(); track house.id) {
     <app-house-listing [HouseListing]="house"></app-house-listing>
     }
 </section>

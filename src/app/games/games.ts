@@ -1,10 +1,9 @@
 import { Component, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { Game } from '../components/game/game';
 
 @Component({
   selector: 'app-games',
-  imports: [RouterLink, Game],
+  imports: [Game],
   templateUrl: './games.html',
   styleUrl: './games.scss'
 })
