@@ -29,6 +29,12 @@ export class Games {
     },
     {
       id: 3,
+      title: 'Sudoku',
+      image: 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzJvYmlkZXp4ZTMxOGlnNHozZnRocm8xd2llbGFhdjllN2RyYjRtaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l41Yy6jvn3BXYDRu0/giphy.gif',
+      link: '/sudoku'
+    },
+    {
+      id: 4,
       title: 'Snake',
       image: 'https://www.coolmathgames.com/sites/default/files/2023-01/History%20of%20Snake%20Game%20Gameplay.gif',
       link: '/snake'

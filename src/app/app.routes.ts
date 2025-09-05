@@ -25,6 +25,9 @@ export const routes: Routes = [
     { path: 'snake', pathMatch: 'full', loadComponent() {
             return import('./snake/snake').then(m => m.Snake);
     }, },
+    { path: 'sudoku', pathMatch: 'full', loadComponent() {
+            return import('./sudoku/sudoku').then(m => m.Sudoku);
+    }, },
     { path: 'minesweeper', pathMatch: 'full', loadComponent() {
             return import('./minesweeper/minesweeper').then(m => m.Minesweeper);
     }, }
