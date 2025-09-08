@@ -17,7 +17,8 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/Angular-game-app",
+            "baseHref": "/Angular-game-app/",
+            "outputPath": "dist",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
