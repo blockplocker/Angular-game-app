@@ -1,14 +1,14 @@
-# 🎨 Angular Showcase by Noa Hallklint
+# 🎨 Angular app by Noa
 Welcome!  
-👋 Hi, I'm **Noa Hallklint**, and this is a showcase of what I've learned while building with Angular.
+👋 Hi, I'm **Noa**, and this is a showcase of what I've learned while building with Angular.
 
 ## 🚀 About the App
 
 This Angular application is a collection of interactive demos and mini-projects that demonstrate key concepts and features of the Angular framework. Each section highlights different aspects of development, from UI components to API integration.
 
-## 🛠️ What I've Learned
+## 🛠️ What I've Learned in this project
 
-Throughout this journey, I've gained hands-on experience with:
+Throughout this project, I've gained hands-on experience with:
 
 - **Component-based architecture**
 - **Data binding & event handling**
