@@ -16,6 +16,11 @@ nav {
 }
 
 span {
+  background-image: url('../../../../public/favicon.ico');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 2rem;
   font-size: 1.5rem;
   font-weight: 700;
   color: #90caf9;
@@ -36,26 +41,20 @@ ul {
   margin-left: auto;
   padding: 0;
 }
-
-@media (max-width: 600px) {
-  nav {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0.5rem 1rem;
+@media (max-width: 800px) {
+  span{
+    font-size: 0rem;
+    width: 2rem;
+    height: 2rem;
   }
+}
+@media (max-width: 600px) {
   ul {
     flex-direction: column;
     width: 100%;
     gap: 0.5rem;
     margin-left: 0;
     padding: 0.5rem 0 0 0;
-  }
-  li {
-    width: 100%;
-    padding: 0.75rem 0.5rem;
-    font-size: 1.1rem;
-    border-radius: 4px;
-    text-align: left;
   }
 }
 

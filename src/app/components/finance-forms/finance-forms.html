@@ -1,0 +1,26 @@
+<form [formGroup]="financesForm" (ngSubmit)="onSubmit()">
+
+    <label for="amount">Amount</label>
+    <input formControlName="amount" type="number" placeholder="Amount" maxlength="16" />
+
+    <label for="title">title</label>
+    <input formControlName="title" type="text" placeholder="title" maxlength="16" />
+
+    <label for="entryType">Entry Type</label>
+    <select formControlName="entryType" id="entryType">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+    </select>
+
+    <label for="category">Category</label>
+    <select formControlName="category" id="category">
+        @for (category of currentCategories; track $index) {
+        <option value="{{ category }}">{{ category }}</option>
+        }
+    </select>
+
+    <label for="date">Date</label>
+    <input formControlName="date" type="date" />
+
+    <button type="submit">Submit</button>
+</form>

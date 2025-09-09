@@ -35,5 +35,13 @@ export const routes: Routes = [
     loadComponent() {
       return import('./games/games').then((m) => m.Games);
     },
+  },
+  {
+    path: 'finances',
+    pathMatch: 'full',
+    loadComponent() {
+      return import('./finances/finances').then((m) => m.Finances);
+    },
   }
+
 ];
