@@ -2,7 +2,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 .sudoku-board {
   display: flex;
@@ -64,7 +63,6 @@
   display: block;
   background: #181a20;
   color: #e3e3e3;
-  min-height: 100vh;
   padding: 2rem;
   font-family: 'Fira Sans', 'Segoe UI', sans-serif;
 }
@@ -112,7 +110,3 @@
   text-align: center;
 }
 
-// .sudoku-board span.sudoku-cell {
-//   color: #90caf9;
-//   font-weight: bold;
-// }

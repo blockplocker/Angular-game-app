@@ -1,8 +1,39 @@
-<h2>Games</h2>
 
-<div class="games-grid">
-    @for (game of games(); track game.id) {
-        <app-game [game]="game"></app-game>
-    }
+<!-- <div class="games-grid">awdawd</div>
+<div class="game-container">dwad</div> -->
 
-</div>
+@if (selectedGame() == null) {
+    <h2>Games</h2>
+    
+    <div class="games-grid">
+        @for (game of games(); track game.id) {
+            <app-game [game]="game" (selectedGameChange)="selectedGame.set($event)"></app-game>
+        }
+    </div>
+}
+
+@if (selectedGame() !== null) {
+    <div class="game-container">
+        <button class="close-button" (click)="selectedGame.set(null)">Close</button>
+        @switch (selectedGame()) {
+            @case (0) {
+                <app-tic-tac-toe></app-tic-tac-toe>
+            }
+            @case (1) {
+                <app-snake></app-snake>
+            }
+            @case (2) {
+                <app-minesweeper></app-minesweeper>
+            }
+            @case (3) {
+                <app-sudoku></app-sudoku>
+            }
+            @case (4) {
+                <app-connect-four></app-connect-four>
+            }
+            @default {
+                <p>Select a game to play.</p>
+            }
+        }
+    </div>
+}

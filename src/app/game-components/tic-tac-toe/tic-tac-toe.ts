@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HighlightWinnerTicTacToe } from '../directives/highlight-winner-tic-tac-toe';
+import { HighlightWinnerTicTacToe } from '../../directives/highlight-winner-tic-tac-toe';
 
 @Component({
   selector: 'app-tic-tac-toe',

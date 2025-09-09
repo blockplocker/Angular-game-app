@@ -1,5 +1,5 @@
-<div class="card" [routerLink]="game().link">
+<div class="card" (click)="selectGame(game().id)">
     <div class="title">{{ game().title }}</div>
     <img [src]="game().image" alt="{{ game().title }}" />
-    <div class="link"><a [routerLink]="game().link">Play Now</a></div>
+    <div class="link"><a >Play Now</a></div>
 </div>

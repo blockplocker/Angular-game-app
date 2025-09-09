@@ -1,14 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Todo } from '../model/todo.type';
+import { Todo } from '../models/todo.type';
 
 @Pipe({
-  name: 'filterTodos'
+  name: 'filterTodos',
 })
 export class FilterTodosPipe implements PipeTransform {
-
   transform(value: Todo[], searchTerm: string): Todo[] {
     if (!searchTerm) return value;
-    return value.filter(todo => todo.title.toLowerCase().includes(searchTerm.toLowerCase()));
+    return value.filter((todo) => todo.title.toLowerCase().includes(searchTerm.toLowerCase()));
   }
-
 }

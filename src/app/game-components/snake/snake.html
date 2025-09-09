@@ -1,0 +1,51 @@
+<div class="snake-container">
+    <h2>Snake Game</h2>
+    <div class="score">Score: {{ score }}</div>
+    
+    <div class="board">
+        @for (row of getBoard(); track $index; let y = $index) {
+            @for (cell of row; track $index; let x = $index) {
+                <div class="cell" [class.snake-head]="cell === 'head'" [class.snake-body]="cell === 'body'"
+                [class.snake-food]="cell === 'food'">
+            </div>
+        }
+    }
+</div>
+
+@if (gameOver) {
+<div class="game-over">
+    <p>Game Over!</p>
+    <p>Restart by pressing R</p>
+    <!-- <button (click)="onRestart()">Restart</button> -->
+</div>
+} @else {
+<div class="instructions">
+    <p>Use WASD keys to move the snake.</p>
+    <p>Eat the food to grow and score points!</p>
+</div>
+}
+
+    <div class="leaderboard">
+        <h3>Leaderboard</h3>
+        <ol>
+            @for (entry of leaderboard; track $index; let i = $index) {
+            <li>
+                <span class="rank">{{ i + 1 }}.</span>
+                <span class="name">{{ entry.name }}</span>
+                <span class="score">{{ entry.score }}</span>
+            </li>
+            }
+        </ol>
+    </div>
+
+    @if (showNameInput) {
+    <div class="name-input-modal">
+        <div class="name-input-box">
+            <h4>Top 10 Score!</h4>
+            <label for="playerName">Enter your name:</label>
+            <input id="playerName" [(ngModel)]="playerName" maxlength="16" placeholder="Your name" />
+            <button (click)="submitName()" [disabled]="!playerName.trim()">Save</button>
+        </div>
+    </div>
+    }
+</div>

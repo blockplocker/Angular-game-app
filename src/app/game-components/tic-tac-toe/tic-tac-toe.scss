@@ -1,11 +1,6 @@
 // Modern dark theme for Tic Tac Toe
 :host {
-  display: block;
-  background: #181a20;
-  color: #e3e3e3;
-  min-height: 88vh;
   padding: 2rem;
-  font-family: 'Fira Sans', 'Segoe UI', sans-serif;
 }
 
 h2 {
@@ -43,8 +38,8 @@ h3 {
   gap: 0.5rem;
 }
 .cell {
-    width: 70px;
-    height: 70px;
+  width: 70px;
+  height: 70px;
   background: #181a20;
   border: 2px solid #1976d2;
   border-radius: 10px;

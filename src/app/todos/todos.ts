@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { TodoService } from '../services/todoService';
-import { Todo as TodoType } from '../model/todo.type';
+import { Todo as TodoType } from '../models/todo.type';
 import { catchError } from 'rxjs';
 import { TodoItem } from '../components/todo-item/todo-item';
 import { FormsModule } from '@angular/forms';
@@ -17,33 +17,36 @@ export class Todos implements OnInit {
   todoitems = signal<Array<TodoType>>([]);
   searchTerm = signal('');
   newTodoTitle = '';
-  
-  ngOnInit(): void {
-    this.todoservice.getTodosFromApi().pipe(catchError((error) => {
-      console.error(error);
-      throw error;
-    })
-  )
-  .subscribe((todos) => {
-    this.todoitems.set(todos);
-  });
-}
-addTodoItem() {
-  if (this.newTodoTitle.trim()) {
-    const newTodo: TodoType = {
-      id: Date.now(),
-      userId: 1,
-      title: this.newTodoTitle,
-      completed: false
-    };
-    this.todoitems.update((todos) => [newTodo, ...todos]);
-    this.newTodoTitle = '';
-  }
-}
 
-clearCompleted() {
-  this.todoitems.update((todos) => todos.filter((todo) => !todo.completed));
-}
+  ngOnInit(): void {
+    this.todoservice
+      .getTodosFromApi()
+      .pipe(
+        catchError((error) => {
+          console.error(error);
+          throw error;
+        })
+      )
+      .subscribe((todos) => {
+        this.todoitems.set(todos);
+      });
+  }
+  addTodoItem() {
+    if (this.newTodoTitle.trim()) {
+      const newTodo: TodoType = {
+        id: Date.now(),
+        userId: 1,
+        title: this.newTodoTitle,
+        completed: false,
+      };
+      this.todoitems.update((todos) => [newTodo, ...todos]);
+      this.newTodoTitle = '';
+    }
+  }
+
+  clearCompleted() {
+    this.todoitems.update((todos) => todos.filter((todo) => !todo.completed));
+  }
 
   updateTodoItem(todoitem: TodoType) {
     this.todoitems.update((todos) => {
@@ -56,4 +59,3 @@ clearCompleted() {
     });
   }
 }
-

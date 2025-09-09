@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Todo as TodoType } from '../model/todo.type';
+import { Todo as TodoType } from '../models/todo.type';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 export class TodoService {
   http = inject(HttpClient);
   getTodosFromApi() {
-    const url ='https://jsonplaceholder.typicode.com/todos'
+    const url = 'https://jsonplaceholder.typicode.com/todos';
     return this.http.get<Array<TodoType>>(url);
   }
 }

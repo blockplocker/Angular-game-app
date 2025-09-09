@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { Todo } from '../../model/todo.type';
+import { Todo } from '../../models/todo.type';
 import { HighlightCompletedTodo } from '../../directives/highlight-completed-todo';
 
 @Component({

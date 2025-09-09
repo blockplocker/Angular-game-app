@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SudokuService } from '../services/sudoku-service';
+import { SudokuService } from '../../services/sudoku-service';
 
 @Component({
   selector: 'app-sudoku',
