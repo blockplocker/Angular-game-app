@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ITransaction } from '../../interfaces/itransaction';
 
 @Component({
   selector: 'app-finance-forms',
@@ -8,9 +9,9 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
   styleUrl: './finance-forms.scss',
 })
 export class FinanceForms {
-  @Output() formSubmit = new EventEmitter<any>();
+  @Output() formSubmit = new EventEmitter<ITransaction>();
   date = new Date();
-  incomeCategories = ['Salary', 'Bonus', 'Gifts', 'Investment', 'Other'];
+  incomeCategories = ['Salary', 'Bonus', 'Gifts', 'Investments', 'Other'];
   expenseCategories = ['Food', 'Transport', 'Entertainment', 'Utilities', 'Other'];
   financesForm: FormGroup;
 
@@ -32,7 +33,7 @@ export class FinanceForms {
 
   onSubmit() {
     if (this.financesForm.valid) {
-      this.formSubmit.emit(this.financesForm.value);
+      this.formSubmit.emit(this.financesForm.value as ITransaction);
     }
   }
 }
