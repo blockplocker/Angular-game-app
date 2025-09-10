@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { FinanceForms } from '../components/finance-forms/finance-forms';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe} from '@angular/common';
+import { ListTransactions } from '../components/list-transactions/list-transactions';
+
 
 @Component({
   selector: 'app-finances',
-  imports: [FinanceForms, CurrencyPipe, DatePipe],
+  imports: [FinanceForms, ListTransactions, CurrencyPipe],
   templateUrl: './finances.html',
   styleUrl: './finances.scss',
 })

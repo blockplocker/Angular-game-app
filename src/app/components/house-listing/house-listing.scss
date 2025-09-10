@@ -38,6 +38,7 @@ button.primary {
 }
 .listing-location {
   padding: 10px 20px 20px 20px;
+  color: var(--primary-color);
 }
 .listing-location::before {
   content: url("../../../assets/location-pin.svg") / "";

@@ -14,7 +14,5 @@ export class Game {
   selectGame(gameId: number) {
     this.selectedGame.set(gameId);
     this.selectedGameChange.emit(gameId);
-    console.log(gameId);
-    
   }
 }

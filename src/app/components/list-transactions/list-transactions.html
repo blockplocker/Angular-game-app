@@ -1,0 +1,17 @@
+<div class="entries-list">
+    <h3>Transactions</h3>
+    <ul>
+        @for (transaction of transactions(); track $index; let i = $index) {
+        <li>
+            <span class="title">{{ transaction.title }}</span>
+            <span class="amount" [class.income]="transaction.entryType === 'income'"
+                [class.expense]="transaction.entryType === 'expense'">
+                {{ transaction.entryType === 'income' ? '+' : '-' }}{{ transaction.amount | currency }}
+            </span>
+            <span class="category">{{ transaction.category }}</span>
+            <span class="date">{{ transaction.date | date:'shortDate' }}</span>
+            <button (click)="DeleteTransaction(i)">Delete</button>
+        </li>
+        }
+    </ul>
+</div>
