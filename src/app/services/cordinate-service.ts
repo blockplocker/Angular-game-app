@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../enviroments/enviroment';
+import { environment } from '../../environments/environment';
 import { Icordinates } from '../interfaces/icordinates';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class CordinateService {
 
   getCityCoordinates(city: string): Observable<Icordinates[]> {
     const headers = new HttpHeaders({
-      'X-Api-Key': environment.apiKey
+      'X-Api-Key': environment.apiKey,
     });
 
     const url = `${environment.geocodingApiUrl}?city=${encodeURIComponent(city)}`;
