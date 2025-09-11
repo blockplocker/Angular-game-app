@@ -42,6 +42,14 @@ export const routes: Routes = [
     loadComponent() {
       return import('./finances/finances').then((m) => m.Finances);
     },
-  }
+  },
+  {
+    path: 'weather',
+    pathMatch: 'full',
+    loadComponent() {
+      return import('./weather/weather').then((m) => m.Weather);
+    },
+  },
+
 
 ];

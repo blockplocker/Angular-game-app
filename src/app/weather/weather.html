@@ -1,0 +1,21 @@
+<div class="search-container">
+    <input type="text" [(ngModel)]="cityName" placeholder="Enter city name" (keyup.enter)="getweather()" />
+    @if (errorMessage.length > 0) {
+    <div class="error-message">{{ errorMessage }}</div>
+    }
+    <button (click)="getweather()">search by city</button>
+    <button (click)="getcurrentlocation()">My Weather</button>
+</div>
+
+@if (weatherData) {
+<div class="weather-info">
+    <h2>Weather in {{ weatherData.name }}, {{ weatherData.sys.country }}</h2>
+    <img src="https://openweathermap.org/img/wn/{{ weatherData.weather[0].icon }}@2x.png" alt="Weather icon" />
+    <p><strong>Temperature:</strong> {{ weatherData.main.temp }}°C (feels like {{ weatherData.main.feels_like }}°C)</p>
+    <p><strong>Min:</strong> {{ weatherData.main.temp_min }}°C <strong>Max:</strong> {{ weatherData.main.temp_max }}°C</p>
+    <p><strong>Humidity:</strong> {{ weatherData.main.humidity }}%</p>
+    <p><strong>Wind:</strong> {{ weatherData.wind.speed }} m/s</p>
+    <p><strong>Clouds:</strong> {{ weatherData.clouds.all }}%</p>
+    <p><strong>Conditions:</strong> {{ weatherData.weather[0].main }} - {{ weatherData.weather[0].description }}</p>
+</div>
+}
