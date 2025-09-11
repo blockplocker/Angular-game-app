@@ -1,0 +1,1 @@
+var a={production:!1,apiKey:"z38u7ZnhItG8IQOON89S9w==UuMuV1GaceCBb36I",sudokuApiUrl:"https://api.api-ninjas.com/v1/sudokugenerate",geocodingApiUrl:"https://api.api-ninjas.com/v1/geocoding",weatherApiUrl:"https://api.openweathermap.org/data/2.5/weather",weatherApiKey:"5bba11d367f510d7a244e5d31d27ada4"};export{a};
