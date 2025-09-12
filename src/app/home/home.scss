@@ -30,14 +30,14 @@ section {
   text-align: left;
 }
 
-.portfolio-skills h2,
-.portfolio-demos h2,
+.skills h2,
+.demos h2,
 .portfolio-github h2 {
   font-size: 1.7rem;
   color: #1976d2;
   margin-bottom: 1rem;
 }
-.portfolio-skills ul {
+.skills ul {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -45,7 +45,7 @@ section {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0.7rem;
 }
-.portfolio-skills li {
+.skills li {
   background: #181a20;
   color: #90caf9;
   padding: 0.7rem 1rem;
@@ -54,7 +54,7 @@ section {
   box-shadow: 0 1px 4px rgba(25, 118, 210, 0.07);
 }
 
-.portfolio-demos .demos-grid {
+.demos .demos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;

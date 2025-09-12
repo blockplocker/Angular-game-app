@@ -44,6 +44,13 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'discussly',
+    pathMatch: 'full',
+    loadComponent() {
+      return import('./discussly/discussly').then((m) => m.Discussly);
+    },
+  },
+  {
     path: 'weather',
     pathMatch: 'full',
     loadComponent() {

@@ -38,7 +38,6 @@ input[type='text']::placeholder {
 input[type='text']:focus {
   border-color: lighten($blue, 10%);
   outline: none;
-  background: darken($input-dark, 2%);
 }
 
 button {
