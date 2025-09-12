@@ -1,1 +1,8 @@
 <p>discussly works!</p>
+
+@for (category of (categories | async); track category.id) {
+  <div>
+    <h2>{{ category.name }}</h2>
+    <p>{{ category.description }}</p>
+  </div>
+}

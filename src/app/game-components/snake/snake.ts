@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { LeaderboardEntry } from '../../interfaces/ileaderboard-entry';
-import { Direction } from '../../enums/direction';
+import { Direction } from '../../models/direction';
 import { FormsModule } from '@angular/forms';
 
 interface Point {
