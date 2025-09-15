@@ -1,0 +1,74 @@
+
+h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+ul {
+  margin: 0;
+  padding: 0 0 0 1.5em;
+}
+
+li {
+  margin: 1.5em 0;
+  padding: 0;
+}
+
+b { /* used for event dates/times */
+  margin-right: 3px;
+}
+
+.container {
+  display: flex;
+  min-height: 100%;
+  font-size: 14px;
+  background: #e3e3e3;
+  color: #181a20;
+}
+
+.sidebar {
+  width: 300px;
+  line-height: 1.5;
+  // background: #eaf9ff;
+  border-right: 1px solid #e3e3e3;
+}
+
+.sidebar-section {
+  padding: 2em;
+}
+
+.main {
+  flex-grow: 1;
+  padding: 3em;
+}
+
+.fc { /* the calendar root */
+  max-width: 1100px;
+  margin: 0 auto;
+}
+// .fc-theme-standard {
+//   --fc-page-bg-color: #e3e3e3;
+//   --fc-neutral-bg-color: #f8f8f8;
+//   --fc-border-color: #ddd;
+//   --fc-button-bg-color: #fff;
+//   --fc-button-text-color: #000;
+//   --fc-button-hover-bg-color: #eee;
+//   --fc-event-bg-color: #3788d8;
+//   --fc-event-border-color: #3788d8;
+//   --fc-event-text-color: #fff;
+//   --fc-text-color: #000;
+// }
+
+.fc-theme-standard {
+  // --fc-page-bg-color: #121212;
+  // --fc-neutral-bg-color: #1e1e1e;
+  --fc-border-color: #333;
+  // --fc-button-bg-color: #333;
+  // --fc-button-text-color: #fff;
+  // --fc-button-hover-bg-color: #444;
+  // --fc-event-bg-color: #3a3a3a;
+  --fc-event-border-color: #555;
+  // --fc-event-text-color: #fff;
+  // --fc-text-color: #ccc;
+}
+

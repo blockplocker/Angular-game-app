@@ -12,6 +12,6 @@ export class Discussly {
   categories: any;
 
   constructor(private discusslyService: DiscusslyService) {
-    this.categories = this.discusslyService.getCategories();
+    // this.categories = this.discusslyService.getCategories();
   }
 }

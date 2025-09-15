@@ -1,0 +1,23 @@
+<div class="container">
+    
+    <div class="sidebar">
+        <div class="sidebar-section">
+            <!-- <button (click)="toggleWeekends()">toggle weekends</button> -->
+            <h2>Instructions</h2>
+            <ul>
+                <li>Select dates and you will be prompted to create a new event</li>
+                <li>Click existing events to delete them</li>
+                <li>Drag, drop, and resize events</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main">
+        <full-calendar [options]="calendarOptions">
+            <ng-template #eventContent let-arg>
+                <b>{{ arg.timeText }}</b>
+                <i>{{ arg.event.title }}</i>
+            </ng-template>
+        </full-calendar>
+    </div>
+</div>

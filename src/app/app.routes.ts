@@ -57,6 +57,13 @@ export const routes: Routes = [
       return import('./weather/weather').then((m) => m.Weather);
     },
   },
+  {
+    path: 'calender',
+    pathMatch: 'full',
+    loadComponent() {
+      return import('./calender/calender').then((m) => m.Calender);
+    },
+  },
 
 
 ];

@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Category, Client, Post, Comment } from '../Domain/client';
+import { Category, Client, Post, Comment } from '../Domain/discussly/client';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DiscusslyService {
-  
-  constructor(private Client: Client) {
-  }
+  constructor(private Client: Client) {}
 
   getCategories() {
     return this.Client.categoriesAll();
