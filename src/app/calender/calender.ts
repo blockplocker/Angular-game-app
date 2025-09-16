@@ -79,18 +79,6 @@ export class Calender {
     this.modalClickInfo = clickInfo;
   }
 
-  refreshEvents() {
-    this.calenderService.getEvents().subscribe((events: any[]) => {
-      this.calendarOptions.events = events.map((e) => ({
-        id: String(e.id),
-        title: e.title,
-        start: e.start,
-        end: e.end,
-        allDay: e.allday,
-      }));
-    });
-  }
-
   // Modal event handlers
   onModalConfirm(value: string) {
     if (this.modalMode === 'create' && this.modalSelectInfo) {

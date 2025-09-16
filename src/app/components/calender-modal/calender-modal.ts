@@ -14,7 +14,7 @@ export class CalenderModal {
   @Input() eventDate: string = '';
   @Input() eventId: string = '';
 
-  @Output() confirm = new EventEmitter<string>(); // emits title for create, id for delete
+  @Output() confirm = new EventEmitter<string>(); 
   @Output() cancel = new EventEmitter<void>();
 
   inputTitle: string = '';
