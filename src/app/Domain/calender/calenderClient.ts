@@ -156,6 +156,13 @@ export class CalenderClient implements ICalenderClient {
             result200 = Event.fromJS(resultData200);
             return _observableOf(result200);
             }));
+        } else if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = Event.fromJS(resultData201);
+            return _observableOf(result201);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);

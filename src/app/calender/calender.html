@@ -1,8 +1,8 @@
 <div class="container">
-    
-    <div class="sidebar">
+
+    <!-- <div class="sidebar">
         <div class="sidebar-section">
-            <!-- <button (click)="toggleWeekends()">toggle weekends</button> -->
+            <button (click)="refreshEvents()">refresh</button>
             <h2>Instructions</h2>
             <ul>
                 <li>Select dates and you will be prompted to create a new event</li>
@@ -10,7 +10,10 @@
                 <li>Drag, drop, and resize events</li>
             </ul>
         </div>
-    </div>
+    </div> -->
+
+    <app-calender-modal [isOpen]="modalOpen" [mode]="modalMode" [title]="modalTitle" [eventDate]="modalEventDate"
+        [eventId]="modalEventId" (confirm)="onModalConfirm($event)" (cancel)="onModalCancel()"></app-calender-modal>
 
     <div class="main">
         <full-calendar [options]="calendarOptions">

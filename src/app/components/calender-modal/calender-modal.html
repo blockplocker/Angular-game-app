@@ -1,0 +1,22 @@
+@if (isOpen) {
+<div class="modal-backdrop" (click)="close()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>{{ title }}</h2>
+        @if (mode === 'create') {
+
+        <label for="eventTitle">Event Title:</label>
+        <input id="eventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Enter event title" />
+        <button (click)="onConfirm()"
+            [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 30">Create</button>
+
+        } @else if (mode === 'delete') {
+
+        <p>Are you sure you want to delete this event?</p>
+        <p>Date: {{ eventDate }}</p>
+        <button (click)="onConfirm()">Delete</button>
+
+        }
+        <button (click)="close()">Cancel</button>
+    </div>
+</div>
+}
