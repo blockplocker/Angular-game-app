@@ -21,7 +21,7 @@ export interface ICalenderClient {
     eventsAll(): Observable<Event[]>;
     /**
      * @param body (optional) 
-     * @return OK
+     * @return Created
      */
     eventsPOST(body: Event | undefined): Observable<Event>;
     /**
@@ -30,11 +30,11 @@ export interface ICalenderClient {
     eventsGET(id: number): Observable<Event>;
     /**
      * @param body (optional) 
-     * @return OK
+     * @return No Content
      */
     eventsPUT(id: number, body: Event | undefined): Observable<void>;
     /**
-     * @return OK
+     * @return No Content
      */
     eventsDELETE(id: number): Observable<void>;
 }
@@ -110,7 +110,7 @@ export class CalenderClient implements ICalenderClient {
 
     /**
      * @param body (optional) 
-     * @return OK
+     * @return Created
      */
     eventsPOST(body: Event | undefined): Observable<Event> {
         let url_ = this.baseUrl + "/Events";
@@ -149,14 +149,7 @@ export class CalenderClient implements ICalenderClient {
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Event.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status === 201) {
+        if (status === 201) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result201: any = null;
             let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -227,7 +220,7 @@ export class CalenderClient implements ICalenderClient {
 
     /**
      * @param body (optional) 
-     * @return OK
+     * @return No Content
      */
     eventsPUT(id: number, body: Event | undefined): Observable<void> {
         let url_ = this.baseUrl + "/Events/{id}";
@@ -268,7 +261,7 @@ export class CalenderClient implements ICalenderClient {
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
+        if (status === 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return _observableOf(null as any);
             }));
@@ -281,7 +274,7 @@ export class CalenderClient implements ICalenderClient {
     }
 
     /**
-     * @return OK
+     * @return No Content
      */
     eventsDELETE(id: number): Observable<void> {
         let url_ = this.baseUrl + "/Events/{id}";
@@ -318,7 +311,7 @@ export class CalenderClient implements ICalenderClient {
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
+        if (status === 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return _observableOf(null as any);
             }));

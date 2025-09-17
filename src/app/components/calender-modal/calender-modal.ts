@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class CalenderModal {
   @Input() isOpen = false;
-  @Input() mode: 'create' | 'delete' = 'create';
+  @Input() mode: 'create' | 'delete' | 'error' = 'create'; 
   @Input() title = '';
   @Input() eventDate: string = '';
   @Input() eventId: string = '';

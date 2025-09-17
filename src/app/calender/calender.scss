@@ -42,22 +42,13 @@ b {
   padding: 3em;
 }
 
-.fc { /* the calendar root */
+.fc { 
   max-width: 1100px;
   margin: 0 auto;
 }
 
 .fc-theme-standard {
-  // --fc-page-bg-color: #121212;
-  // --fc-neutral-bg-color: #1e1e1e;
   --fc-border-color: #333;
-  // --fc-button-bg-color: #333;
-  // --fc-button-text-color: #fff;
-  // --fc-button-hover-bg-color: #444;
-  // --fc-event-bg-color: #3a3a3a;
-  --fc-event-border-color: #555;
-  // --fc-event-text-color: #fff;
-  // --fc-text-color: #ccc;
 }
 
 // :root{
@@ -89,4 +80,3 @@ b {
 //     --fc-today-bg-color: rgba(255, 220, 40, .15);
 //     --fc-now-indicator-color: red;
 // }
-
