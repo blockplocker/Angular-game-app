@@ -8,6 +8,8 @@ import listPlugin from '@fullcalendar/list';
 import { CalenderService } from '../services/calender-service';
 import { DatePipe } from '@angular/common';
 import { CalenderModal } from '../components/calender-modal/calender-modal';
+import { Ievent } from '../interfaces/ievent';
+import { guid } from '@fullcalendar/core/internal';
 
 @Component({
   selector: 'app-calender',
@@ -17,35 +19,52 @@ import { CalenderModal } from '../components/calender-modal/calender-modal';
   styleUrl: './calender.scss',
 })
 export class Calender {
-  private eventsSubscription: any = null;
+  useLocalStorage = false;
 
   constructor(private calenderService: CalenderService, private datePipe: DatePipe) {}
 
   ngOnInit(): void {
-    this.eventsSubscription = this.calenderService.getEvents().subscribe({
+    if (!this.useLocalStorage) {
+      this.getEventsWithAPI();
+    } else {
+      this.getEventsWithLocalStorage();
+    }
+  }
+
+  getEventsWithAPI() {
+    this.calenderService.getEvents().subscribe({
       next: (events: any[]) => {
         this.calendarOptions.events = events.map((e) => ({
           id: String(e.id),
           title: e.title,
           start: e.start,
           end: e.end,
-          allDay: e.allday,
+          allDay: e.allDay ?? e.allday,
         }));
       },
-      error: (err: any) => {
+      error: () => {
+        if (!this.useLocalStorage) {
+          this.showLocalStorageErrorModal();
+          return;
+        }
         this.showErrorModal('Failed to fetch events. Please try again later.');
       },
     });
   }
 
-  ngOnDestroy(): void {
-    if (this.eventsSubscription) {
-      this.eventsSubscription.unsubscribe();
-    }
+  getEventsWithLocalStorage() {
+    const events = this.calenderService.getEventsFromLocalStorage();
+    this.calendarOptions.events = events.map((e: any) => ({
+      id: String(e.id),
+      title: e.title,
+      start: e.start,
+      end: e.end,
+      allDay: e.allDay ?? e.allday,
+    }));
   }
+
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin],
-    themeSystem: 'bootstrap',
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
@@ -71,13 +90,14 @@ export class Calender {
 
   // Modal state
   modalOpen = false;
-  modalMode: 'create' | 'delete' | 'error' = 'create';
+  modalMode: 'create' | 'delete' | 'error' | 'localStorageError' = 'create';
   modalTitle = '';
   modalEventDate = '';
   modalEventId = '';
   modalSelectInfo: DateSelectArg | null = null;
   modalClickInfo: any = null;
 
+  // Handlers for calendar interactions
   handleDateSelect(selectInfo: DateSelectArg): void {
     const calendarApi = selectInfo.view.calendar;
     if (calendarApi) {
@@ -121,12 +141,24 @@ export class Calender {
       allDay: info.event.allDay,
     };
 
+    if (!this.useLocalStorage) {
+      this.updateEventWithApi(info, updatedEvent);
+    } else {
+      this.updateEventWithLocalstorage(info, updatedEvent);
+    }
+  }
+
+  updateEventWithApi(info: any, updatedEvent: any): void {
     this.calenderService.updateEvent(Number(updatedEvent.id), updatedEvent).subscribe({
-      error: (err: any) => {
+      error: () => {
         this.showErrorModal('Failed to update event. Please try again.');
         if (info.revert) info.revert();
       },
     });
+  }
+
+  updateEventWithLocalstorage(info: any, updatedEvent: any): void {
+    this.calenderService.updateEventLocal(updatedEvent.id, updatedEvent);
   }
 
   // Modal event handlers
@@ -139,40 +171,87 @@ export class Calender {
         this.showErrorModal('Event title is required and must be 20 characters or less.');
         return;
       }
-      this.calenderService
-        .createEvent({
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay,
-        })
-        .subscribe({
-          next: (Response: any) => {
-            if (calendarApi) {
-              calendarApi.addEvent({
-                id: String(Response?.id),
-                title,
-                start: selectInfo.startStr,
-                end: selectInfo.endStr,
-                allDay: selectInfo.allDay,
-              });
-            }
-          },
-          error: (err: any) => {
-            this.showErrorModal('Failed to create event. Please try again.');
-          },
-        });
+
+      const Event: Ievent = {
+        id: 0, // Placeholder, actual ID will be set by backend or local storage function
+        title,
+        start: selectInfo.startStr,
+        end: selectInfo.endStr,
+        allDay: selectInfo.allDay,
+      };
+
+      if (!this.useLocalStorage) {
+        this.createEventWithApi(Event, calendarApi);
+      } else {
+        this.createEventWithLocalstorage(Event, calendarApi);
+      }
+
     } else if (this.modalMode === 'delete' && this.modalClickInfo && this.modalClickInfo.event) {
-      this.calenderService.deleteEvent(Number(this.modalEventId)).subscribe({
-        next: () => {
-          this.modalClickInfo.event.remove();
-        },
-        error: (err: any) => {
-          this.showErrorModal('Failed to delete event. Please try again.');
-        },
-      });
+      if (!this.useLocalStorage) {
+        this.deleteEventWithApi(this.modalEventId);
+      } else {
+        this.deleteEventWithLocalstorage(this.modalEventId);
+      }
     }
     this.closeModal();
+  }
+
+  createEventWithApi(event: Ievent, calendarApi: any): void {
+    this.calenderService
+      .createEvent({
+        title: event.title,
+        start: event.start,
+        end: event.end,
+        allDay: event.allDay,
+      })
+      .subscribe({
+        next: (Response: any) => {
+          if (calendarApi) {
+            calendarApi.addEvent({
+              id: String(Response?.id),
+              title: event.title,
+              start: event.start,
+              end: event.end,
+              allDay: event.allDay,
+            });
+          }
+        },
+        error: () => {
+          this.showErrorModal('Failed to create event. Please try again.');
+        },
+      });
+  }
+
+  createEventWithLocalstorage(event: any, calendarApi: any): void {
+    event.id = crypto.randomUUID();
+    const createdEvent = this.calenderService.createEventLocal(event);
+    if (calendarApi) {
+      calendarApi.addEvent({
+        id: createdEvent.id,
+        title: createdEvent.title,
+        start: createdEvent.start,
+        end: createdEvent.end,
+        allDay: createdEvent.allDay,
+      });
+    }
+  }
+
+  deleteEventWithApi(eventId: string): void {
+    this.calenderService.deleteEvent(Number(eventId)).subscribe({
+      next: () => {
+        this.modalClickInfo.event.remove();
+      },
+      error: () => {
+        this.showErrorModal('Failed to delete event. Please try again.');
+      },
+    });
+  }
+
+  deleteEventWithLocalstorage(eventId: string): void {
+    this.calenderService.deleteEventLocal(eventId);
+    if (this.modalClickInfo && this.modalClickInfo.event) {
+      this.modalClickInfo.event.remove();
+    }
   }
 
   showErrorModal(message: string): void {
@@ -181,8 +260,10 @@ export class Calender {
     this.modalOpen = true;
   }
 
-  onModalCancel(): void {
-    this.closeModal();
+  showLocalStorageErrorModal(): void {
+    this.modalMode = 'localStorageError';
+    this.modalTitle = 'API Error - try using Local Storage';
+    this.modalOpen = true;
   }
 
   closeModal(): void {
@@ -192,7 +273,10 @@ export class Calender {
     this.modalEventDate = '';
   }
 
-  openModal(): void {
-    this.modalOpen = true;
+  storage = 'Backend Server';
+  toggleLocalStorage() {
+    this.useLocalStorage = !this.useLocalStorage;
+    this.storage = this.useLocalStorage ? 'Local Storage' : 'Backend Server';
+    this.ngOnInit();
   }
 }

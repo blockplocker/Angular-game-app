@@ -9,13 +9,14 @@ import { FormsModule } from '@angular/forms';
 })
 export class CalenderModal {
   @Input() isOpen = false;
-  @Input() mode: 'create' | 'delete' | 'error' = 'create'; 
+  @Input() mode: 'create' | 'delete' | 'error' | 'localStorageError' = 'create';
   @Input() title = '';
   @Input() eventDate: string = '';
   @Input() eventId: string = '';
 
   @Output() confirm = new EventEmitter<string>(); 
   @Output() cancel = new EventEmitter<void>();
+  @Output() toggleStorage = new EventEmitter<void>();
 
   inputTitle: string = '';
 
@@ -30,6 +31,11 @@ export class CalenderModal {
     } else if (this.mode === 'delete') {
       this.confirm.emit(this.eventId);
     }
+    this.isOpen = false;
+  }
+
+  useLocalStorage(){
+    this.toggleStorage.emit();
     this.isOpen = false;
   }
 }

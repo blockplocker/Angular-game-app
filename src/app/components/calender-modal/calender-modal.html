@@ -7,7 +7,7 @@
         <label for="eventTitle">Event Title:</label>
         <input id="eventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Enter event title" />
         <button (click)="onConfirm()"
-            [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 30">Create</button>
+            [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 20">Create</button>
 
         } @else if (mode === 'delete') {
 
@@ -16,7 +16,14 @@
         <button (click)="onConfirm()">Delete</button>
 
         }
+        @else if (mode === 'localStorageError') {
+            <button (click)="useLocalStorage()">use localstorage </button>
+        }
+        @if (mode == 'error') {
+        <button class="cancel" (click)="close()">ok</button>
+        } @else {
         <button class="cancel" (click)="close()">Cancel</button>
+        }
     </div>
 </div>
 }

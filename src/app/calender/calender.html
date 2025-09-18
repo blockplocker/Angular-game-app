@@ -1,6 +1,6 @@
 <div class="container">
 
-    <!-- <div class="sidebar">
+    <div class="sidebar">
         <div class="sidebar-section">
             <h2>Instructions</h2>
             <ul>
@@ -8,11 +8,14 @@
                 <li>Click existing events to delete them</li>
                 <li>Drag, drop, and resize events</li>
             </ul>
+            <p>Events are saved to a backend server. If the server is unreachable, you can switch to using local storage.</p>
+            <p>Using <span>{{ storage }}</span></p>
+            <button (click)="toggleLocalStorage()">Toggle Local Storage</button>
         </div>
-    </div> -->
-
-    <app-calender-modal [isOpen]="modalOpen" [mode]="modalMode" [title]="modalTitle" [eventDate]="modalEventDate" [eventId]="modalEventId" (confirm)="onModalConfirm($event)" (cancel)="onModalCancel()"></app-calender-modal>
-
+    </div>
+    
+    <app-calender-modal [isOpen]="modalOpen" [mode]="modalMode" [title]="modalTitle" [eventDate]="modalEventDate" [eventId]="modalEventId" (confirm)="onModalConfirm($event)" (cancel)="closeModal()" (toggleStorage)="toggleLocalStorage()"></app-calender-modal>
+    
     <div class="main">
         <full-calendar [options]="calendarOptions">
             <ng-template #eventContent let-arg>
