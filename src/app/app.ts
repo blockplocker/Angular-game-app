@@ -7,7 +7,7 @@ import { Header } from './components/header/header';
   imports: [RouterOutlet, Header],
   template: `
     <main>
-    <app-header></app-header>
+      <app-header></app-header>
       <router-outlet></router-outlet>
     </main>
 
@@ -19,8 +19,6 @@ import { Header } from './components/header/header';
         display: flex;
         flex-direction: column;
         min-height: 100vh;
-        background: #181a20;
-        color: #e3e3e3;
         font-family: 'Fira Sans', 'Segoe UI', sans-serif;
       }
     `,

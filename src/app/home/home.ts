@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './home.scss'
 })
 export class Home {
-  homeMessage = signal('👋 Hi, I\'m Noa!');
+  homeMessage = signal('👋 Hi, I\'m Noa, and this is a showcase of what I\'ve learned while building with Angular.');
   inputKey = signal('');
   @HostListener('window:keydown', ['$event'])
   handleKeydown(event: KeyboardEvent) {

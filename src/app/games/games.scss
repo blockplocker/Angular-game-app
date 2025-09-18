@@ -4,6 +4,7 @@
   background: #181a20;
   color: #e3e3e3;
   font-family: 'Fira Sans', 'Segoe UI', sans-serif;
+  flex-grow: 1;
 }
 
 .games-grid {
@@ -16,6 +17,7 @@
 }
 .game-container {
   position: relative;
+  height: 100%;
 }
 
 h2 {

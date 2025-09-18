@@ -1,7 +1,10 @@
+:host {
+  flex-grow: 1;
+  display: flex;
+}
 
 h2 {
   margin: 0;
-  font-size: 16px;
 }
 
 ul {
@@ -31,18 +34,14 @@ button:hover {
 }
 
 .container {
+  flex-grow: 1;
   display: flex;
-  min-height: 100%;
-  font-size: 14px;
-  background: #e3e3e3;
-  color: #181a20;
 }
 
 .sidebar {
   width: 300px;
   line-height: 1.5;
-  // background: #eaf9ff;
-  border-right: 1px solid #e3e3e3;
+  background: #eaf9ff;
 }
 
 .sidebar-section {
@@ -50,7 +49,7 @@ button:hover {
 }
 
 .main {
-  flex-grow: 2;
+  flex-grow: 1;
   padding: 3em;
 }
 
@@ -60,7 +59,7 @@ button:hover {
 }
 
 .fc-theme-standard {
-  --fc-border-color: #333;
+  --fc-border-color: #a3a3a3;
 }
 
 // :root{
@@ -101,8 +100,6 @@ button:hover {
 
   .sidebar {
     width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #e3e3e3;
   }
 
   .main {
