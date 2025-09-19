@@ -9,7 +9,6 @@ import { CalenderService } from '../services/calender-service';
 import { DatePipe } from '@angular/common';
 import { CalenderModal } from '../components/calender-modal/calender-modal';
 import { Ievent } from '../interfaces/ievent';
-import { guid } from '@fullcalendar/core/internal';
 
 @Component({
   selector: 'app-calender',
@@ -20,6 +19,7 @@ import { guid } from '@fullcalendar/core/internal';
 })
 export class Calender {
   useLocalStorage = false;
+  private eventsSubscription: any = null;
 
   constructor(private calenderService: CalenderService, private datePipe: DatePipe) {}
 
@@ -31,8 +31,14 @@ export class Calender {
     }
   }
 
-  getEventsWithAPI() {
-    this.calenderService.getEvents().subscribe({
+  ngOnDestroy(): void {
+    if (this.eventsSubscription) {
+      this.eventsSubscription.unsubscribe();
+    }
+  }
+
+  getEventsWithAPI() {    
+    this.eventsSubscription = this.calenderService.getEvents().subscribe({
       next: (events: any[]) => {
         this.calendarOptions.events = events.map((e) => ({
           id: String(e.id),
@@ -144,7 +150,7 @@ export class Calender {
     if (!this.useLocalStorage) {
       this.updateEventWithApi(info, updatedEvent);
     } else {
-      this.updateEventWithLocalstorage(info, updatedEvent);
+      this.updateEventWithLocalstorage(updatedEvent);
     }
   }
 
@@ -157,7 +163,7 @@ export class Calender {
     });
   }
 
-  updateEventWithLocalstorage(info: any, updatedEvent: any): void {
+  updateEventWithLocalstorage(updatedEvent: any): void {
     this.calenderService.updateEventLocal(updatedEvent.id, updatedEvent);
   }
 
@@ -185,7 +191,6 @@ export class Calender {
       } else {
         this.createEventWithLocalstorage(Event, calendarApi);
       }
-
     } else if (this.modalMode === 'delete' && this.modalClickInfo && this.modalClickInfo.event) {
       if (!this.useLocalStorage) {
         this.deleteEventWithApi(this.modalEventId);
@@ -275,8 +280,12 @@ export class Calender {
 
   storage = 'Backend Server';
   toggleLocalStorage() {
-    this.useLocalStorage = !this.useLocalStorage;
+    this.useLocalStorage = !this.useLocalStorage;    
     this.storage = this.useLocalStorage ? 'Local Storage' : 'Backend Server';
+    this.calendarOptions.events = [];
+    if (this.eventsSubscription) {
+      this.eventsSubscription.unsubscribe();
+    }
     this.ngOnInit();
   }
 }

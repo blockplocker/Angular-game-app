@@ -8,6 +8,6 @@ import { RouterLink } from '@angular/router';
   styleUrl: './header.scss'
 })
 export class Header {
-  title = signal('My first Angular app');
+  title = signal('Angular app by Noa');
 
 }

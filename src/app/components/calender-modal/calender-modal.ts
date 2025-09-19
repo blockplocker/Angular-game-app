@@ -32,10 +32,13 @@ export class CalenderModal {
       this.confirm.emit(this.eventId);
     }
     this.isOpen = false;
+    this.inputTitle = '';
   }
 
   useLocalStorage(){
     this.toggleStorage.emit();
+    this.cancel.emit();
     this.isOpen = false;
+    
   }
 }
