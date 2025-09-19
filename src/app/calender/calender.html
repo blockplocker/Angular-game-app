@@ -13,9 +13,11 @@
             <button (click)="toggleLocalStorage()">Toggle Local Storage</button>
         </div>
     </div>
-    
-    <app-calender-modal [isOpen]="modalOpen" [mode]="modalMode" [title]="modalTitle" [eventDate]="modalEventDate" [eventId]="modalEventId" (confirm)="onModalConfirm($event)" (cancel)="closeModal()" (toggleStorage)="toggleLocalStorage()"></app-calender-modal>
-    
+
+    <app-calender-modal [isOpen]="modalOpen" [mode]="modalMode" [title]="modalTitle" [eventDate]="modalEventDate" [eventId]="modalEventId"
+    (create)="onModalCreate($event)" (delete)="onModalDelete()" (update)="onModalUpdate($event)"
+    (cancel)="closeModal()" (toggleStorage)="toggleLocalStorage()"></app-calender-modal>
+
     <div class="main">
         <full-calendar [options]="calendarOptions">
             <ng-template #eventContent let-arg>

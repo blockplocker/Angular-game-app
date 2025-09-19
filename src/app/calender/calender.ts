@@ -87,6 +87,11 @@ export class Calender {
       minute: '2-digit',
       hour12: false,
     },
+    eventTimeFormat: {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    },
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventDrop: this.handleEventUpdate.bind(this),
@@ -96,7 +101,7 @@ export class Calender {
 
   // Modal state
   modalOpen = false;
-  modalMode: 'create' | 'delete' | 'error' | 'localStorageError' = 'create';
+  modalMode: 'create' | 'update' | 'error' | 'localStorageError' = 'create';
   modalTitle = '';
   modalEventDate = '';
   modalEventId = '';
@@ -120,9 +125,9 @@ export class Calender {
       this.showErrorModal('Invalid event click info.');
       return;
     }
-    this.modalMode = 'delete';
-    this.modalTitle = `Delete Event ${clickInfo.event.title}`;
-    this.modalEventDate = this.datePipe.transform(clickInfo.event.start, 'mediumDate') || '';
+    this.modalMode = 'update';
+    this.modalTitle = `Update Event: ${clickInfo.event.title}`;
+    this.modalEventDate = `${this.datePipe.transform(clickInfo.event.start, 'M/d/yy, HH:mm')} -  ${this.datePipe.transform(clickInfo.event.end, 'M/d/yy, HH:mm')}`;
     this.modalEventId = String(clickInfo.event.id);
     this.modalOpen = true;
     this.modalClickInfo = clickInfo;
@@ -168,8 +173,8 @@ export class Calender {
   }
 
   // Modal event handlers
-  onModalConfirm(value: string): void {
-    if (this.modalMode === 'create' && this.modalSelectInfo) {
+  onModalCreate(value: string): void {
+    if(this.modalSelectInfo){
       const selectInfo = this.modalSelectInfo;
       const calendarApi = selectInfo.view.calendar;
       const title = value.trim();
@@ -191,7 +196,12 @@ export class Calender {
       } else {
         this.createEventWithLocalstorage(Event, calendarApi);
       }
-    } else if (this.modalMode === 'delete' && this.modalClickInfo && this.modalClickInfo.event) {
+    }
+    this.closeModal();
+  }
+
+  onModalDelete(): void {
+    if(this.modalClickInfo && this.modalClickInfo.event) {
       if (!this.useLocalStorage) {
         this.deleteEventWithApi(this.modalEventId);
       } else {
@@ -199,6 +209,18 @@ export class Calender {
       }
     }
     this.closeModal();
+  }
+
+  onModalUpdate(value: string): void {
+    if(this.modalClickInfo && this.modalClickInfo.event) {
+      if (!value || value.trim() === '' || value.length > 20) {
+        this.showErrorModal('Event title is required and must be 20 characters or less.');
+        return;
+      }
+      this.modalClickInfo.event.setProp('title', value.trim());
+      this.handleEventUpdate(this.modalClickInfo);
+      this.closeModal();
+    }
   }
 
   createEventWithApi(event: Ievent, calendarApi: any): void {

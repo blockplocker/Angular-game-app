@@ -2,23 +2,26 @@
 <div class="modal-backdrop" (click)="close()">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <h2>{{ title }}</h2>
-        @if (mode === 'create') {
+        @if (mode === 'create' ) {
 
         <label for="eventTitle">Event Title:</label>
         <input id="eventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Enter event title" />
-        <button (click)="onConfirm()"
-            [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 20">Create</button>
+        <button (click)="onCreate()" [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 20">Create</button>
 
-        } @else if (mode === 'delete') {
-
-        <p>Are you sure you want to delete this event?</p>
+        } @else if (mode === 'update') {
         <p>Date: {{ eventDate }}</p>
-        <button (click)="onConfirm()">Delete</button>
+
+        <label for="eventTitle">Event Title:</label>
+        <input id="eventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Update event title" />
+        <button (click)="onUpdate()" [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 20">Update</button>
+
+        <button (click)="onDelete()">Delete</button>
 
         }
         @else if (mode === 'localStorageError') {
-            <button (click)="useLocalStorage()">use localstorage </button>
+        <button (click)="useLocalStorage()">use localstorage </button>
         }
+
         @if (mode == 'error') {
         <button class="cancel" (click)="close()">ok</button>
         } @else {

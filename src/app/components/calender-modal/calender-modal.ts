@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -9,14 +9,16 @@ import { FormsModule } from '@angular/forms';
 })
 export class CalenderModal {
   @Input() isOpen = false;
-  @Input() mode: 'create' | 'delete' | 'error' | 'localStorageError' = 'create';
+  @Input() mode: 'create' | 'update' | 'error' | 'localStorageError' = 'create';
   @Input() title = '';
   @Input() eventDate: string = '';
   @Input() eventId: string = '';
 
-  @Output() confirm = new EventEmitter<string>(); 
-  @Output() cancel = new EventEmitter<void>();
   @Output() toggleStorage = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
+  @Output() delete = new EventEmitter<string>(); 
+  @Output() create = new EventEmitter<string>(); 
+  @Output() update = new EventEmitter<string>();
 
   inputTitle: string = '';
 
@@ -25,12 +27,17 @@ export class CalenderModal {
     this.isOpen = false;
   }
 
-  onConfirm() {
-    if (this.mode === 'create') {
-      this.confirm.emit(this.inputTitle);
-    } else if (this.mode === 'delete') {
-      this.confirm.emit(this.eventId);
-    }
+  onDelete() {
+    this.delete.emit(this.eventId);
+    this.isOpen = false;
+  }
+  onCreate() {
+    this.create.emit(this.inputTitle);
+    this.isOpen = false;
+    this.inputTitle = '';
+  }
+  onUpdate() {
+    this.update.emit(this.inputTitle);
     this.isOpen = false;
     this.inputTitle = '';
   }
@@ -39,6 +46,5 @@ export class CalenderModal {
     this.toggleStorage.emit();
     this.cancel.emit();
     this.isOpen = false;
-    
   }
 }
