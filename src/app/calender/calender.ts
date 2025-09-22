@@ -7,12 +7,13 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import { CalenderService } from '../services/calender-service';
 import { DatePipe } from '@angular/common';
-import { CalenderModal } from '../components/calender-modal/calender-modal';
 import { Ievent } from '../interfaces/ievent';
+import { ModalWrapper } from '../components/modal-wrapper/modal-wrapper';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-calender',
-  imports: [FullCalendarModule, CalenderModal],
+  imports: [FullCalendarModule, ModalWrapper, FormsModule],
   providers: [DatePipe],
   templateUrl: './calender.html',
   styleUrl: './calender.scss',
@@ -35,38 +36,6 @@ export class Calender {
     if (this.eventsSubscription) {
       this.eventsSubscription.unsubscribe();
     }
-  }
-
-  getEventsWithAPI() {    
-    this.eventsSubscription = this.calenderService.getEvents().subscribe({
-      next: (events: any[]) => {
-        this.calendarOptions.events = events.map((e) => ({
-          id: String(e.id),
-          title: e.title,
-          start: e.start,
-          end: e.end,
-          allDay: e.allDay ?? e.allday,
-        }));
-      },
-      error: () => {
-        if (!this.useLocalStorage) {
-          this.showLocalStorageErrorModal();
-          return;
-        }
-        this.showErrorModal('Failed to fetch events. Please try again later.');
-      },
-    });
-  }
-
-  getEventsWithLocalStorage() {
-    const events = this.calenderService.getEventsFromLocalStorage();
-    this.calendarOptions.events = events.map((e: any) => ({
-      id: String(e.id),
-      title: e.title,
-      start: e.start,
-      end: e.end,
-      allDay: e.allDay ?? e.allday,
-    }));
   }
 
   calendarOptions: CalendarOptions = {
@@ -100,13 +69,17 @@ export class Calender {
   };
 
   // Modal state
-  modalOpen = false;
-  modalMode: 'create' | 'update' | 'error' | 'localStorageError' = 'create';
-  modalTitle = '';
-  modalEventDate = '';
-  modalEventId = '';
-  modalSelectInfo: DateSelectArg | null = null;
-  modalClickInfo: any = null;
+  createModalOpen = false;
+  updateModalOpen = false;
+  localStorageErrorModalOpen = false;
+  errorModalOpen = false;
+
+  inputTitle: string = '';
+  title = '';
+  eventDate = '';
+  eventId = '';
+  SelectInfo: DateSelectArg | null = null;
+  ClickInfo: any = null;
 
   // Handlers for calendar interactions
   handleDateSelect(selectInfo: DateSelectArg): void {
@@ -114,10 +87,9 @@ export class Calender {
     if (calendarApi) {
       calendarApi.unselect();
     }
-    this.modalMode = 'create';
-    this.modalTitle = 'Create Event';
-    this.modalOpen = true;
-    this.modalSelectInfo = selectInfo;
+    this.title = 'Create Event';
+    this.createModalOpen = true;
+    this.SelectInfo = selectInfo;
   }
 
   handleEventClick(clickInfo: any): void {
@@ -125,12 +97,14 @@ export class Calender {
       this.showErrorModal('Invalid event click info.');
       return;
     }
-    this.modalMode = 'update';
-    this.modalTitle = `Update Event: ${clickInfo.event.title}`;
-    this.modalEventDate = `${this.datePipe.transform(clickInfo.event.start, 'M/d/yy, HH:mm')} -  ${this.datePipe.transform(clickInfo.event.end, 'M/d/yy, HH:mm')}`;
-    this.modalEventId = String(clickInfo.event.id);
-    this.modalOpen = true;
-    this.modalClickInfo = clickInfo;
+    this.title = `Update Event: ${clickInfo.event.title}`;
+    this.eventDate = `${this.datePipe.transform(
+      clickInfo.event.start,
+      'M/d/yy, HH:mm'
+    )} -  ${this.datePipe.transform(clickInfo.event.end, 'M/d/yy, HH:mm')}`;
+    this.eventId = String(clickInfo.event.id);
+    this.updateModalOpen = true;
+    this.ClickInfo = clickInfo;
   }
 
   handleEventUpdate(info: any): void {
@@ -159,23 +133,10 @@ export class Calender {
     }
   }
 
-  updateEventWithApi(info: any, updatedEvent: any): void {
-    this.calenderService.updateEvent(Number(updatedEvent.id), updatedEvent).subscribe({
-      error: () => {
-        this.showErrorModal('Failed to update event. Please try again.');
-        if (info.revert) info.revert();
-      },
-    });
-  }
-
-  updateEventWithLocalstorage(updatedEvent: any): void {
-    this.calenderService.updateEventLocal(updatedEvent.id, updatedEvent);
-  }
-
-  // Modal event handlers
-  onModalCreate(value: string): void {
-    if(this.modalSelectInfo){
-      const selectInfo = this.modalSelectInfo;
+  // Modal action handlers
+  onCreate(value: string): void {
+    if (this.SelectInfo) {
+      const selectInfo = this.SelectInfo;
       const calendarApi = selectInfo.view.calendar;
       const title = value.trim();
       if (!title || title.length > 20) {
@@ -200,27 +161,60 @@ export class Calender {
     this.closeModal();
   }
 
-  onModalDelete(): void {
-    if(this.modalClickInfo && this.modalClickInfo.event) {
+  onDelete(): void {
+    if (this.ClickInfo && this.ClickInfo.event) {
       if (!this.useLocalStorage) {
-        this.deleteEventWithApi(this.modalEventId);
+        this.deleteEventWithApi(this.eventId);
       } else {
-        this.deleteEventWithLocalstorage(this.modalEventId);
+        this.deleteEventWithLocalstorage(this.eventId);
       }
     }
     this.closeModal();
   }
 
-  onModalUpdate(value: string): void {
-    if(this.modalClickInfo && this.modalClickInfo.event) {
+  onUpdate(value: string): void {
+    if (this.ClickInfo && this.ClickInfo.event) {
       if (!value || value.trim() === '' || value.length > 20) {
         this.showErrorModal('Event title is required and must be 20 characters or less.');
         return;
       }
-      this.modalClickInfo.event.setProp('title', value.trim());
-      this.handleEventUpdate(this.modalClickInfo);
+      this.ClickInfo.event.setProp('title', value.trim());
+      this.handleEventUpdate(this.ClickInfo);
       this.closeModal();
     }
+  }
+
+  // crud operations
+  getEventsWithAPI() {
+    this.eventsSubscription = this.calenderService.getEvents().subscribe({
+      next: (events: any[]) => {
+        this.calendarOptions.events = events.map((e) => ({
+          id: String(e.id),
+          title: e.title,
+          start: e.start,
+          end: e.end,
+          allDay: e.allDay ?? e.allday,
+        }));
+      },
+      error: () => {
+        if (!this.useLocalStorage) {
+          this.showLocalStorageErrorModal();
+          return;
+        }
+        this.showErrorModal('Failed to fetch events. Please try again later.');
+      },
+    });
+  }
+
+  getEventsWithLocalStorage() {
+    const events = this.calenderService.getEventsFromLocalStorage();
+    this.calendarOptions.events = events.map((e: any) => ({
+      id: String(e.id),
+      title: e.title,
+      start: e.start,
+      end: e.end,
+      allDay: e.allDay ?? e.allday,
+    }));
   }
 
   createEventWithApi(event: Ievent, calendarApi: any): void {
@@ -263,10 +257,24 @@ export class Calender {
     }
   }
 
+  updateEventWithApi(info: any, updatedEvent: any): void {
+    this.calenderService.updateEvent(Number(updatedEvent.id), updatedEvent).subscribe({
+      error: () => {
+        this.showErrorModal('Failed to update event. Please try again.');
+        if (info.revert) info.revert();
+      },
+    });
+  }
+
+  updateEventWithLocalstorage(updatedEvent: any): void {
+    this.calenderService.updateEventLocal(updatedEvent.id, updatedEvent);
+  }
+
   deleteEventWithApi(eventId: string): void {
     this.calenderService.deleteEvent(Number(eventId)).subscribe({
       next: () => {
-        this.modalClickInfo.event.remove();
+        this.ClickInfo.event.remove();
+        this.ClickInfo = null;
       },
       error: () => {
         this.showErrorModal('Failed to delete event. Please try again.');
@@ -276,33 +284,38 @@ export class Calender {
 
   deleteEventWithLocalstorage(eventId: string): void {
     this.calenderService.deleteEventLocal(eventId);
-    if (this.modalClickInfo && this.modalClickInfo.event) {
-      this.modalClickInfo.event.remove();
+    if (this.ClickInfo && this.ClickInfo.event) {
+      this.ClickInfo.event.remove();
+      this.ClickInfo = null;
     }
   }
 
+  // Modal control methods
   showErrorModal(message: string): void {
-    this.modalMode = 'error';
-    this.modalTitle = message;
-    this.modalOpen = true;
+    this.title = message;
+    this.errorModalOpen = true;
   }
 
   showLocalStorageErrorModal(): void {
-    this.modalMode = 'localStorageError';
-    this.modalTitle = 'API Error - try using Local Storage';
-    this.modalOpen = true;
+    this.title = 'API Error - try using Local Storage';
+    this.localStorageErrorModalOpen = true;
   }
 
   closeModal(): void {
-    this.modalOpen = false;
-    this.modalSelectInfo = null;
-    this.modalEventId = '';
-    this.modalEventDate = '';
+    this.SelectInfo = null;
+    this.eventId = '';
+    this.eventDate = '';
+    this.inputTitle = '';
+    this.createModalOpen = false;
+    this.updateModalOpen = false;
+    this.errorModalOpen = false;
+    this.localStorageErrorModalOpen = false;
   }
 
+  // Toggle between API and Local Storage
   storage = 'Backend Server';
   toggleLocalStorage() {
-    this.useLocalStorage = !this.useLocalStorage;    
+    this.useLocalStorage = !this.useLocalStorage;
     this.storage = this.useLocalStorage ? 'Local Storage' : 'Backend Server';
     this.calendarOptions.events = [];
     if (this.eventsSubscription) {

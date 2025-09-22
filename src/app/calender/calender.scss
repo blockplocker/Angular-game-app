@@ -107,3 +107,62 @@ button:hover {
   }
   
 }
+
+
+input[type='text'],
+input[type='search'],
+input[type='email'],
+input[type='password'],
+input {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+button {
+  padding: 0.6rem 1.4rem;
+  border: none;
+  border-radius: 5px;
+  background: #007bff;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 0.7rem;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+button:disabled {
+  background: #b0b0b0;
+  cursor: not-allowed;
+}
+button:hover:not(:disabled),
+button:focus:not(:disabled) {
+  background: #0056b3;
+}
+
+.cancel {
+  background: #e0e0e0;
+  color: #333;
+  margin-bottom: 0;
+}
+.cancel:hover {
+  background: #bdbdbd;
+}
+
+label {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 0.3rem;
+  display: block;
+}

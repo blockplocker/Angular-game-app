@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CalenderModal } from './calender-modal';
+import { ModalWrapper } from './modal-wrapper';
 
-describe('CalenderModal', () => {
-  let component: CalenderModal;
-  let fixture: ComponentFixture<CalenderModal>;
+describe('ModalWrapper', () => {
+  let component: ModalWrapper;
+  let fixture: ComponentFixture<ModalWrapper>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CalenderModal]
+      imports: [ModalWrapper]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CalenderModal);
+    fixture = TestBed.createComponent(ModalWrapper);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
