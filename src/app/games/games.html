@@ -5,7 +5,7 @@
 @if (selectedGame() == null) {
     <h2>Games</h2>
     
-    <div class="games-grid">
+    <div class=" games-grid">
         @for (game of games(); track game.id) {
             <app-game [game]="game" (selectedGameChange)="selectedGame.set($event)"></app-game>
         }

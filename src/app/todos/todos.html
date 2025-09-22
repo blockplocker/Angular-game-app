@@ -1,21 +1,41 @@
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Todo List from API</h3>
+                    @if (!todoitems().length){
+                    <div class="alert alert-info text-center">Loading...</div>
+                }
+                <div class="row mb-3 ">
 
-<h3>Todo List from api</h3>
-@if (!todoitems().length){
-    <p>Loading...</p>
-}
-<section>
-    <input name="searchTerm" type="text" placeholder="search todos..." [(ngModel)]="searchTerm"/>
-
-    <input type="text" [(ngModel)]="newTodoTitle" placeholder="add New Todo">
-    <button (click)="addTodoItem()">Add Todo</button>
-
-    <button (click)="clearCompleted()">Clear Completed</button>
-
-</section>
-
-<ul>
-    @for (todo of todoitems() | filterTodos: searchTerm(); track todo.id) {
-        <app-todo-item (todotoggled)="updateTodoItem($event)" [todo]="todo"></app-todo-item>
-    }
-    
-</ul>
+                    <div class="col-12">
+                        <input name="searchTerm" type="text" class="form-control" placeholder="Search todos..."
+                        [(ngModel)]="searchTerm" />
+                    </div>
+                    <form class="row g-2 mb-3" (submit)="$event.preventDefault(); addTodoItem();">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" [(ngModel)]="newTodoTitle"
+                            placeholder="Add New Todo" />
+                        </div>
+                        <div class="col-md-3 d-grid">
+                            <button type="submit" class="btn btn-primary">Add Todo</button>
+                        </div>
+                        <div class="col-md-3 d-grid">
+                            <button type="button" class="btn btn-warning" (click)="clearCompleted()">Clear
+                                Completed</button>
+                            </div>
+                    </form>
+                    </div>
+                    <ul class="list-group">
+                        @for (todo of todoitems() | filterTodos: searchTerm(); track todo.id) {
+                        <li class="list-group-item p-0">
+                            <app-todo-item (todotoggled)="updateTodoItem($event)" [todo]="todo"></app-todo-item>
+                        </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
