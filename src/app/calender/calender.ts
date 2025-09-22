@@ -78,8 +78,8 @@ export class Calender {
   title = '';
   eventDate = '';
   eventId = '';
-  SelectInfo: DateSelectArg | null = null;
-  ClickInfo: any = null;
+  selectInfo: DateSelectArg | null = null;
+  clickInfo: any = null;
 
   // Handlers for calendar interactions
   handleDateSelect(selectInfo: DateSelectArg): void {
@@ -89,7 +89,7 @@ export class Calender {
     }
     this.title = 'Create Event';
     this.createModalOpen = true;
-    this.SelectInfo = selectInfo;
+    this.selectInfo = selectInfo;
   }
 
   handleEventClick(clickInfo: any): void {
@@ -104,7 +104,7 @@ export class Calender {
     )} -  ${this.datePipe.transform(clickInfo.event.end, 'M/d/yy, HH:mm')}`;
     this.eventId = String(clickInfo.event.id);
     this.updateModalOpen = true;
-    this.ClickInfo = clickInfo;
+    this.clickInfo = clickInfo;
   }
 
   handleEventUpdate(info: any): void {
@@ -135,8 +135,8 @@ export class Calender {
 
   // Modal action handlers
   onCreate(value: string): void {
-    if (this.SelectInfo) {
-      const selectInfo = this.SelectInfo;
+    if (this.selectInfo) {
+      const selectInfo = this.selectInfo;
       const calendarApi = selectInfo.view.calendar;
       const title = value.trim();
       if (!title || title.length > 20) {
@@ -162,7 +162,7 @@ export class Calender {
   }
 
   onDelete(): void {
-    if (this.ClickInfo && this.ClickInfo.event) {
+    if (this.clickInfo && this.clickInfo.event) {
       if (!this.useLocalStorage) {
         this.deleteEventWithApi(this.eventId);
       } else {
@@ -173,13 +173,13 @@ export class Calender {
   }
 
   onUpdate(value: string): void {
-    if (this.ClickInfo && this.ClickInfo.event) {
+    if (this.clickInfo && this.clickInfo.event) {
       if (!value || value.trim() === '' || value.length > 20) {
         this.showErrorModal('Event title is required and must be 20 characters or less.');
         return;
       }
-      this.ClickInfo.event.setProp('title', value.trim());
-      this.handleEventUpdate(this.ClickInfo);
+      this.clickInfo.event.setProp('title', value.trim());
+      this.handleEventUpdate(this.clickInfo);
       this.closeModal();
     }
   }
@@ -273,8 +273,8 @@ export class Calender {
   deleteEventWithApi(eventId: string): void {
     this.calenderService.deleteEvent(Number(eventId)).subscribe({
       next: () => {
-        this.ClickInfo.event.remove();
-        this.ClickInfo = null;
+        this.clickInfo.event.remove();
+        this.clickInfo = null;
       },
       error: () => {
         this.showErrorModal('Failed to delete event. Please try again.');
@@ -284,9 +284,9 @@ export class Calender {
 
   deleteEventWithLocalstorage(eventId: string): void {
     this.calenderService.deleteEventLocal(eventId);
-    if (this.ClickInfo && this.ClickInfo.event) {
-      this.ClickInfo.event.remove();
-      this.ClickInfo = null;
+    if (this.clickInfo && this.clickInfo.event) {
+      this.clickInfo.event.remove();
+      this.clickInfo = null;
     }
   }
 
@@ -302,7 +302,7 @@ export class Calender {
   }
 
   closeModal(): void {
-    this.SelectInfo = null;
+    this.selectInfo = null;
     this.eventId = '';
     this.eventDate = '';
     this.inputTitle = '';

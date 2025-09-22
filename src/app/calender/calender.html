@@ -16,8 +16,8 @@
     </div>
 
     <app-modal-wrapper [isOpen]="createModalOpen" [title]="title" (cancel)="closeModal()">
-        <label for="eventTitle">Event Title:</label>
-        <input id="eventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Enter event title" />
+        <label for="createEventTitle">Event Title:</label>
+        <input id="createEventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Enter event title" />
         <button (click)="onCreate(inputTitle)"
             [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 20">Create</button>
         <button class="cancel" (click)="closeModal()">Cancel</button>
@@ -25,8 +25,8 @@
 
     <app-modal-wrapper [isOpen]="updateModalOpen" [title]="title" (cancel)="closeModal()">
         <p>Date: {{ eventDate }}</p>
-        <label for="eventTitle">Event Title:</label>
-        <input id="eventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Update event title" />
+        <label for="updateEventTitle">Event Title:</label>
+        <input id="updateEventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Update event title" />
         <button (click)="onUpdate(inputTitle)"
             [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 20">Update</button>
         <button (click)="onDelete()">Delete</button>
@@ -34,12 +34,12 @@
     </app-modal-wrapper>
 
     <app-modal-wrapper [isOpen]="localStorageErrorModalOpen" [title]="title" (cancel)="closeModal()">
-        <button (click)="toggleLocalStorage()">use localstorage </button>
+        <button (click)="toggleLocalStorage()">Use Local Storage</button>
         <button class="cancel" (click)="closeModal()">Cancel</button>
     </app-modal-wrapper>
 
     <app-modal-wrapper [isOpen]="errorModalOpen" [title]="title" (cancel)="closeModal()">
-        <button class="cancel" (click)="closeModal()">ok</button>
+        <button class="cancel" (click)="closeModal()">OK</button>
     </app-modal-wrapper>
 
 

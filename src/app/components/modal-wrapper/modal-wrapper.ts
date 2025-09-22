@@ -18,7 +18,10 @@ export class ModalWrapper {
 
   close() {
     this.cancel.emit();
-    this.isOpen = false;
   }
-
+  onBackdropKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.close();
+    } 
+  }
 }

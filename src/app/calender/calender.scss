@@ -22,15 +22,25 @@ b {
 }
 button {
   cursor: pointer;
-  background: #1c6fc3;
+  background: #007bff;
+  color: #fff;
   border: none;
-  color: white;
-  padding: 0.5em 1em;
-  font-size: 14px;
-  border-radius: 4px;
+  border-radius: 5px;
+  padding: 0.6rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-right: 0.7rem;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
-button:hover {
-  background: #155fa1;
+button:disabled {
+  background: #b0b0b0;
+  cursor: not-allowed;
+}
+button:hover:not(:disabled),
+button:focus:not(:disabled) {
+  background: #0056b3;
 }
 
 .container {
@@ -128,28 +138,7 @@ input:focus {
   outline: none;
 }
 
-button {
-  padding: 0.6rem 1.4rem;
-  border: none;
-  border-radius: 5px;
-  background: #007bff;
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  margin-right: 0.7rem;
-  margin-bottom: 0.5rem;
-  transition: background 0.2s, box-shadow 0.2s;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
-button:disabled {
-  background: #b0b0b0;
-  cursor: not-allowed;
-}
-button:hover:not(:disabled),
-button:focus:not(:disabled) {
-  background: #0056b3;
-}
+/* Removed duplicate button styles. See merged definition above. */
 
 .cancel {
   background: #e0e0e0;
