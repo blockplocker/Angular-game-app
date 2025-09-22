@@ -1,6 +1,8 @@
 import { Component, signal, HostListener } from '@angular/core';
 import { Greeting } from '../components/greeting/greeting';
 import { RouterLink } from '@angular/router';
+import { Weather } from '../weather/weather';
+import { Calender } from '../calender/calender';
 
 @Component({
   selector: 'app-home',

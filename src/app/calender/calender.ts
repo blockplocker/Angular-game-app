@@ -51,6 +51,9 @@ export class Calender {
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
+    firstDay: 1,
+    weekNumbers: true,
+    weekNumberCalculation: 'ISO',
     slotLabelFormat: {
       hour: '2-digit',
       minute: '2-digit',
@@ -322,5 +325,6 @@ export class Calender {
       this.eventsSubscription.unsubscribe();
     }
     this.ngOnInit();
+    this.closeModal();
   }
 }
