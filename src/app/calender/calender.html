@@ -1,54 +1,74 @@
-<div class="container">
-
-    <div class="sidebar">
-        <div class="sidebar-section">
-            <h2>Instructions</h2>
-            <ul>
-                <li>Select dates and you will be prompted to create a new event</li>
-                <li>Click existing events to delete them</li>
-                <li>Drag, drop, and resize events</li>
-            </ul>
-            <p>Events are saved to a backend server. If the server is unreachable, you can switch to using local
-                storage.</p>
-            <p>Using <span>{{ storage }}</span></p>
-            <button (click)="toggleLocalStorage()">Toggle Local Storage</button>
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title h5 mb-3">Instructions</h2>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item">Select dates and you will be prompted to create a new event</li>
+                        <li class="list-group-item">Click existing events to delete them</li>
+                        <li class="list-group-item">Drag, drop, and resize events</li>
+                    </ul>
+                    <p class="mb-2">Events are saved to a backend server. If the server is unreachable, you can switch
+                        to using local storage.</p>
+                    <p class="mb-3">Using <span class="fw-bold">{{ storage }}</span></p>
+                    <button (click)="toggleLocalStorage()" class="btn btn-outline-primary w-100">Toggle Local Storage</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <full-calendar [options]="calendarOptions">
+                        <ng-template #eventContent let-arg>
+                            <b>{{ arg.timeText }}</b>
+                            <i>{{ arg.event.title }}</i>
+                        </ng-template>
+                    </full-calendar>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Modal wrappers styled with Bootstrap -->
     <app-modal-wrapper [isOpen]="createModalOpen" [title]="title" (cancel)="closeModal()">
-        <label for="createEventTitle">Event Title:</label>
-        <input id="createEventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Enter event title" />
-        <button (click)="onCreate(inputTitle)"
-            [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 20">Create</button>
-        <button class="cancel" (click)="closeModal()">Cancel</button>
+        <div class="mb-3">
+            <label for="createEventTitle" class="form-label">Event Title:</label>
+            <input id="createEventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Enter event title"
+                class="form-control" />
+        </div>
+        <div class="d-flex gap-2">
+            <button (click)="onCreate(inputTitle)"
+                [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 20"
+                class="btn btn-primary">Create</button>
+            <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        </div>
     </app-modal-wrapper>
 
     <app-modal-wrapper [isOpen]="updateModalOpen" [title]="title" (cancel)="closeModal()">
-        <p>Date: {{ eventDate }}</p>
-        <label for="updateEventTitle">Event Title:</label>
-        <input id="updateEventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Update event title" />
-        <button (click)="onUpdate(inputTitle)"
-            [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 20">Update</button>
-        <button (click)="onDelete()">Delete</button>
-        <button class="cancel" (click)="closeModal()">Cancel</button>
+        <p class="mb-2">Date: {{ eventDate }}</p>
+        <div class="mb-3">
+            <label for="updateEventTitle" class="form-label">Event Title:</label>
+            <input id="updateEventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Update event title"
+                class="form-control" />
+        </div>
+        <div class="d-flex gap-2">
+            <button (click)="onUpdate(inputTitle)"
+                [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 20"
+                class="btn btn-primary">Update</button>
+            <button (click)="onDelete()" class="btn btn-danger">Delete</button>
+            <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        </div>
     </app-modal-wrapper>
 
     <app-modal-wrapper [isOpen]="localStorageErrorModalOpen" [title]="title" (cancel)="closeModal()">
-        <button (click)="toggleLocalStorage()">Use Local Storage</button>
-        <button class="cancel" (click)="closeModal()">Cancel</button>
+        <div class="d-flex gap-2">
+            <button (click)="toggleLocalStorage()" class="btn btn-warning">Use Local Storage</button>
+            <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        </div>
     </app-modal-wrapper>
 
     <app-modal-wrapper [isOpen]="errorModalOpen" [title]="title" (cancel)="closeModal()">
-        <button class="cancel" (click)="closeModal()">OK</button>
+        <button class="btn btn-secondary w-100" (click)="closeModal()">OK</button>
     </app-modal-wrapper>
-
-
-    <div class="main">
-        <full-calendar [options]="calendarOptions">
-            <ng-template #eventContent let-arg>
-                <b>{{ arg.timeText }}</b>
-                <i>{{ arg.event.title }}</i>
-            </ng-template>
-        </full-calendar>
-    </div>
 </div>

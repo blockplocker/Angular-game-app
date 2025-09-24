@@ -1,81 +1,143 @@
-
-<div class="home-container">
-    <section class="portfolio-intro">
-        <h1>🎨 Angular App by Noa</h1>
-        <app-greeting [message]="homeMessage()"></app-greeting>
-        <a href="https://github.com/blockplocker" target="_blank" class="github-link">GitHub</a>
-        <a href="https://www.linkedin.com/in/noa-hallklint/" target="_blank" class="github-link">LinkedIn</a>
-    </section>
-
-    <section class="about">
-        <h2>🚀 About the App</h2>
-        <p>This Angular application is a collection of interactive demos and mini-projects that demonstrate key concepts and features of the Angular framework. Each section highlights different aspects of development, from UI components to API integration.</p>
-    </section>
-
-    <section class="skills">
-        <h2>🛠️ What I've Learned in this Project</h2>
-        <ul>
-            <li><strong>Component-based architecture</strong></li>
-            <li><strong>Data binding & event handling</strong></li>
-            <li><strong>Services & Dependency Injection</strong></li>
-            <li><strong>Routing & navigation</strong></li>
-            <li><strong>Directives & pipes</strong></li>
-            <li><strong>SCSS styling & theming</strong></li>
-            <li><strong>Working with APIs using NSwag</strong></li>
-            <li><strong>Local storage CRUD operations</strong></li>
-            <li><strong>Charting and data visualization</strong></li>
-            <li><strong>Calendar and event management</strong></li>
-            <li><strong>Finance tracking and category analysis</strong></li>
-        </ul>
-    </section>
-
-    <section class="demos">
-        <h2>🎮 Demos</h2>
-        <div class="demos-grid">
-            <div class="demo-card" routerLink="/games">
-                    <h3>🕹️ Games</h3>
-                <p>A collection of fun and interactive games built with Angular. Great for showcasing dynamic UI and event handling.</p>
-            </div>
-            <div class="demo-card" routerLink="/finances">
-                    <h3>💰 Finance</h3>
-                <p>Track your personal finances by adding transactions, viewing your balance, and analyzing spending by category.</p>
-                <ul>
-                    <li>Transaction input form</li>
-                    <li>Real-time balance updates</li>
-                    <li>Category-based spending breakdown</li>
-                    <li>Chart showing balance over time</li>
-                </ul>
-            </div>
-            <div class="demo-card" routerLink="/calender">
-                    <h3>📅 Calendar</h3>
-                <p>Manage your schedule with a dynamic calendar interface.</p>
-                <ul>
-                    <li>Create, reschedule, and delete events</li>
-                    <li>Dual CRUD support:
-                        <ul>
-                            <li><strong>API-based CRUD</strong> via NSwag</li>
-                            <li><strong>Local storage fallback</strong> for offline use or when API access is unavailable</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <div class="demo-card" routerLink="/weather">
-                <h3>🌤️ Weather</h3>
-                <p>Check the weather forecast for your location with a sleek and responsive UI.</p>
-            </div>
-            <div class="demo-card" routerLink="/discussly">
-                <h3>💬 Discussly Integration</h3>
-                <p>Early-stage integration with the <a href="https://github.com/blockplocker/DiscusslyApi" target="_blank">Discussly forum API</a> using NSwag. Backend connectivity is set up, but frontend implementation is still in progress.</p>
-            </div>
-            <div class="demo-card" routerLink="/houses">
-                <h3>🏠 Housing</h3>
-                <p>Browse housing listings with detailed views, filters, and interactive features. Demonstrates routing and services.</p>
-            </div>
-            <div class="demo-card" routerLink="/todos">
-                    <h3>✅ Todos</h3>
-                <p>A simple yet powerful todo app that fetches tasks from an API. Highlights CRUD operations and reactive forms.</p>
+<div class="container py-4">
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-10">
+            <div class="card shadow mb-4">
+                <div class="card-body ">
+                    <h1 class="card-title display-5 mb-3">🎨 Angular App by Noa</h1>
+                    <app-greeting [message]="homeMessage()"></app-greeting>
+                    <a href="https://github.com/blockplocker" target="_blank"
+                        class="btn btn-outline-primary mx-2">GitHub</a>
+                    <a href="https://www.linkedin.com/in/noa-hallklint/" target="_blank"
+                        class="btn btn-outline-info mx-2">LinkedIn</a>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
 
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-10">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-3 ">🚀 About the App</h2>
+                    <p class="mb-0">This Angular application is a collection of interactive demos and mini-projects that
+                        demonstrate key concepts and features of the Angular framework. Each section highlights
+                        different aspects of development, from UI components to API integration.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-10">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-3">🛠️ What I've Learned in this Project</h2>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Component-based architecture</strong></li>
+                        <li class="list-group-item"><strong>Data binding & event handling</strong></li>
+                        <li class="list-group-item"><strong>Services & Dependency Injection</strong></li>
+                        <li class="list-group-item"><strong>Routing & navigation</strong></li>
+                        <li class="list-group-item"><strong>Directives & pipes</strong></li>
+                        <li class="list-group-item"><strong>SCSS styling & theming</strong></li>
+                        <li class="list-group-item"><strong>Working with APIs using NSwag</strong></li>
+                        <li class="list-group-item"><strong>Local storage CRUD operations</strong></li>
+                        <li class="list-group-item"><strong>Charting and data visualization</strong></li>
+                        <li class="list-group-item"><strong>Calendar and event management</strong></li>
+                        <li class="list-group-item"><strong>Finance tracking and category analysis</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-3">🎮 Demos</h2>
+                    <div class="row g-3">
+                        <div class="col-md-6 col-lg-4">
+                            <a class="card h-100 demo-card text-decoration-none" routerLink="/games">
+                                <div class="card-body">
+                                    <h3 class="card-title">🕹️ Games</h3>
+                                    <p>A collection of fun and interactive games built with Angular. Great for
+                                        showcasing dynamic UI and event handling.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <a class="card h-100 demo-card text-decoration-none" routerLink="/finances">
+                                <div class="card-body">
+                                    <h3 class="card-title">💰 Finance</h3>
+                                    <p>Track your personal finances by adding transactions, viewing your balance, and
+                                        analyzing spending by category.</p>
+                                    <ul>
+                                        <li>Transaction input form</li>
+                                        <li>Real-time balance updates</li>
+                                        <li>Category-based spending breakdown</li>
+                                        <li>Chart showing balance over time</li>
+                                    </ul>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <a class="card h-100 demo-card text-decoration-none" routerLink="/calender">
+                                <div class="card-body">
+                                    <h3 class="card-title">📅 Calendar</h3>
+                                    <p>Manage your schedule with a dynamic calendar interface.</p>
+                                    <ul>
+                                        <li>Create, reschedule, and delete events</li>
+                                        <li>Dual CRUD support:
+                                            <ul>
+                                                <li><strong>API-based CRUD</strong> via NSwag</li>
+                                                <li><strong>Local storage fallback</strong> for offline use or when API
+                                                    access is unavailable</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <a class="card h-100 demo-card text-decoration-none" routerLink="/weather">
+                                <div class="card-body">
+                                    <h3 class="card-title">🌤️ Weather</h3>
+                                    <p>Check the weather forecast for your location with a sleek and responsive UI.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <a class="card h-100 demo-card text-decoration-none" routerLink="/discussly">
+                                <div class="card-body">
+                                    <h3 class="card-title">💬 Discussly Integration</h3>
+                                    <p>Early-stage integration with the <a
+                                            href="https://github.com/blockplocker/DiscusslyApi"
+                                            target="_blank">Discussly forum API</a> using NSwag. Backend connectivity is
+                                        set up, but frontend implementation is still in progress.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <a class="card h-100 demo-card text-decoration-none" routerLink="/houses">
+                                <div class="card-body">
+                                    <h3 class="card-title">🏠 Housing</h3>
+                                    <p>Browse housing listings with detailed views, filters, and interactive features.
+                                        Demonstrates routing and services.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <a class="card h-100 demo-card text-decoration-none" routerLink="/todos">
+                                <div class="card-body">
+                                    <h3 class="card-title">✅ Todos</h3>
+                                    <p>A simple yet powerful todo app that fetches tasks from an API. Highlights CRUD
+                                        operations and reactive forms.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
