@@ -7,10 +7,6 @@ Welcome!
 
 **[Try the live demo on GitHub Pages](https://blockplocker.github.io/Angular-game-app/)**
 
-## 🌐 Live Demo
-
-**[Try the live demo on GitHub Pages](https://blockplocker.github.io/Angular-game-app/)**
-
 ## 🚀 About the App
 
 This Angular application is a collection of interactive demos and mini-projects that demonstrate key concepts and features of the Angular framework. Each section highlights different aspects of development, from UI components to API integration.
