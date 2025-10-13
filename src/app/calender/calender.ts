@@ -76,16 +76,16 @@ export class Calender {
     events: [], // will be populated from API
   };
 
-  // Modal & local state 
-  createModalOpen = false;
-  updateModalOpen = false;
-  localStorageErrorModalOpen = false;
-  errorModalOpen = false;
+  // Modal & local state
+  createModalOpen = signal(false);
+  updateModalOpen = signal(false);
+  localStorageErrorModalOpen = signal(false);
+  errorModalOpen = signal(false);
 
-  inputTitle = '';
-  title = '';
-  eventDate = '';
-  eventId = '';
+  inputTitle = signal('');
+  title = signal('');
+  eventDate = signal('');
+  eventId = signal('');
   selectInfo = signal<DateSelectArg | null>(null);
   clickInfo = signal<EventClickArg | null>(null);
 
@@ -95,8 +95,8 @@ export class Calender {
     if (calendarApi) {
       calendarApi.unselect();
     }
-    this.title = 'Create Event';
-    this.createModalOpen = true;
+    this.title.set('Create Event');
+    this.createModalOpen.set(true);
     this.selectInfo.set(selectInfo);
   }
   handleEventClick(clickInfo: EventClickArg): void {
@@ -104,13 +104,15 @@ export class Calender {
       this.showErrorModal('Invalid event click info.');
       return;
     }
-    this.title = `Update Event: ${clickInfo.event.title}`;
-    this.eventDate = `${this.datePipe.transform(
-      clickInfo.event.start,
-      'M/d/yy, HH:mm'
-    )} -  ${this.datePipe.transform(clickInfo.event.end, 'M/d/yy, HH:mm')}`;
-    this.eventId = String(clickInfo.event.id);
-    this.updateModalOpen = true;
+    this.title.set(`Update Event: ${clickInfo.event.title}`);
+    this.eventDate.set(
+      `${this.datePipe.transform(clickInfo.event.start, 'M/d/yy, HH:mm')} -  ${this.datePipe.transform(
+        clickInfo.event.end,
+        'M/d/yy, HH:mm'
+      )}`
+    );
+    this.eventId.set(String(clickInfo.event.id));
+    this.updateModalOpen.set(true);
     this.clickInfo.set(clickInfo);
   }
   handleEventUpdate(info: EventDropArg | any): void {
@@ -143,7 +145,7 @@ export class Calender {
 
   // Modal action handlers
   onCreate(value: string): void {
-    const select = this.selectInfo();
+  const select = this.selectInfo();
     if (select) {
       const calendarApi = select.view.calendar;
       const title = value.trim();
@@ -173,9 +175,9 @@ export class Calender {
     const click = this.clickInfo();
     if (click && click.event) {
       if (!this.useLocalStorage) {
-        this.deleteEventWithApi(this.eventId);
+        this.deleteEventWithApi(this.eventId());
       } else {
-        this.deleteEventWithLocalstorage(this.eventId);
+        this.deleteEventWithLocalstorage(this.eventId());
       }
     }
     this.closeModal();
@@ -306,24 +308,24 @@ export class Calender {
 
   // Modal control methods
   showErrorModal(message: string): void {
-    this.title = message;
-    this.errorModalOpen = true;
+    this.title.set(message);
+    this.errorModalOpen.set(true);
   }
 
   showLocalStorageErrorModal(): void {
-    this.title = 'API Error - try using Local Storage';
-    this.localStorageErrorModalOpen = true;
+    this.title.set('API Error - try using Local Storage');
+    this.localStorageErrorModalOpen.set(true);
   }
 
   closeModal(): void {
     this.selectInfo.set(null);
-    this.eventId = '';
-    this.eventDate = '';
-    this.inputTitle = '';
-    this.createModalOpen = false;
-    this.updateModalOpen = false;
-    this.errorModalOpen = false;
-    this.localStorageErrorModalOpen = false;
+    this.eventId.set('');
+    this.eventDate.set('');
+    this.inputTitle.set('');
+    this.createModalOpen.set(false);
+    this.updateModalOpen.set(false);
+    this.errorModalOpen.set(false);
+    this.localStorageErrorModalOpen.set(false);
   }
 
   storage = 'Backend Server';
