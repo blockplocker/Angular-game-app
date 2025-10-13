@@ -31,44 +31,44 @@
     </div>
 
     <!-- Modal wrappers styled with Bootstrap -->
-    <app-modal-wrapper [isOpen]="createModalOpen" [title]="title" (cancel)="closeModal()">
+    <app-modal-wrapper [isOpen]="createModalOpen()" [title]="title()" (cancel)="closeModal()">
         <div class="mb-3">
             <label for="createEventTitle" class="form-label">Event Title:</label>
-            <input id="createEventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Enter event title"
+            <input id="createEventTitle" [value]="inputTitle()" (input)="inputTitle.set($any($event.target).value)" maxlength="20" placeholder="Enter event title"
                 class="form-control" />
         </div>
         <div class="d-flex gap-2">
-            <button (click)="onCreate(inputTitle)"
-                [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 20"
+            <button (click)="onCreate(inputTitle())"
+                [disabled]="!inputTitle() || inputTitle().trim() === '' || inputTitle().length > 20"
                 class="btn btn-primary">Create</button>
             <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
         </div>
     </app-modal-wrapper>
 
-    <app-modal-wrapper [isOpen]="updateModalOpen" [title]="title" (cancel)="closeModal()">
-        <p class="mb-2">Date: {{ eventDate }}</p>
+    <app-modal-wrapper [isOpen]="updateModalOpen()" [title]="title()" (cancel)="closeModal()">
+        <p class="mb-2">Date: {{ eventDate() }}</p>
         <div class="mb-3">
             <label for="updateEventTitle" class="form-label">Event Title:</label>
-            <input id="updateEventTitle" [(ngModel)]="inputTitle" maxlength="20" placeholder="Update event title"
+            <input id="updateEventTitle" [value]="inputTitle()" (input)="inputTitle.set($any($event.target).value)" maxlength="20" placeholder="Update event title"
                 class="form-control" />
         </div>
         <div class="d-flex gap-2">
-            <button (click)="onUpdate(inputTitle)"
-                [disabled]="!inputTitle || inputTitle.trim() === '' || inputTitle.length > 20"
+            <button (click)="onUpdate(inputTitle())"
+                [disabled]="!inputTitle() || inputTitle().trim() === '' || inputTitle().length > 20"
                 class="btn btn-primary">Update</button>
             <button (click)="onDelete()" class="btn btn-danger">Delete</button>
             <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
         </div>
     </app-modal-wrapper>
 
-    <app-modal-wrapper [isOpen]="localStorageErrorModalOpen" [title]="title" (cancel)="closeModal()">
+    <app-modal-wrapper [isOpen]="localStorageErrorModalOpen()" [title]="title()" (cancel)="closeModal()">
         <div class="d-flex gap-2">
             <button (click)="toggleLocalStorage()" class="btn btn-warning">Use Local Storage</button>
             <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
         </div>
     </app-modal-wrapper>
 
-    <app-modal-wrapper [isOpen]="errorModalOpen" [title]="title" (cancel)="closeModal()">
+    <app-modal-wrapper [isOpen]="errorModalOpen()" [title]="title()" (cancel)="closeModal()">
         <button class="btn btn-secondary w-100" (click)="closeModal()">OK</button>
     </app-modal-wrapper>
 </div>

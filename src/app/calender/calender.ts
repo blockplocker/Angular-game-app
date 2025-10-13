@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarOptions, DateSelectArg } from '@fullcalendar/core';
+import { CalendarOptions, DateSelectArg, EventClickArg,EventDropArg, EventInput, CalendarApi,} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -16,20 +16,25 @@ import { FormsModule } from '@angular/forms';
   imports: [FullCalendarModule, ModalWrapper, FormsModule],
   providers: [DatePipe],
   templateUrl: './calender.html',
-  styleUrl: './calender.scss',
+  styleUrls: ['./calender.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Calender {
+  private datePipe = inject(DatePipe);
+  private calenderService = inject(CalenderService);
   useLocalStorage = false;
   private eventsSubscription: any = null;
 
-  constructor(private calenderService: CalenderService, private datePipe: DatePipe) {}
-
-  ngOnInit(): void {
+  private loadEvents(): void {
     if (!this.useLocalStorage) {
       this.getEventsWithAPI();
     } else {
       this.getEventsWithLocalStorage();
     }
+  }
+
+  ngOnInit(): void {
+    this.loadEvents();
   }
 
   ngOnDestroy(): void {
@@ -71,66 +76,68 @@ export class Calender {
     events: [], // will be populated from API
   };
 
-  // Modal state
-  createModalOpen = false;
-  updateModalOpen = false;
-  localStorageErrorModalOpen = false;
-  errorModalOpen = false;
+  // Modal & local state
+  createModalOpen = signal(false);
+  updateModalOpen = signal(false);
+  localStorageErrorModalOpen = signal(false);
+  errorModalOpen = signal(false);
 
-  inputTitle: string = '';
-  title = '';
-  eventDate = '';
-  eventId = '';
-  selectInfo: DateSelectArg | null = null;
-  clickInfo: any = null;
+  inputTitle = signal('');
+  title = signal('');
+  eventDate = signal('');
+  eventId = signal('');
+  selectInfo = signal<DateSelectArg | null>(null);
+  clickInfo = signal<EventClickArg | null>(null);
 
   // Handlers for calendar interactions
   handleDateSelect(selectInfo: DateSelectArg): void {
-    const calendarApi = selectInfo.view.calendar;
+    const calendarApi: CalendarApi | undefined = selectInfo.view.calendar;
     if (calendarApi) {
       calendarApi.unselect();
     }
-    this.title = 'Create Event';
-    this.createModalOpen = true;
-    this.selectInfo = selectInfo;
+    this.title.set('Create Event');
+    this.createModalOpen.set(true);
+    this.selectInfo.set(selectInfo);
   }
-
-  handleEventClick(clickInfo: any): void {
+  handleEventClick(clickInfo: EventClickArg): void {
     if (!clickInfo || !clickInfo.event) {
       this.showErrorModal('Invalid event click info.');
       return;
     }
-    this.title = `Update Event: ${clickInfo.event.title}`;
-    this.eventDate = `${this.datePipe.transform(
-      clickInfo.event.start,
-      'M/d/yy, HH:mm'
-    )} -  ${this.datePipe.transform(clickInfo.event.end, 'M/d/yy, HH:mm')}`;
-    this.eventId = String(clickInfo.event.id);
-    this.updateModalOpen = true;
-    this.clickInfo = clickInfo;
+    this.title.set(`Update Event: ${clickInfo.event.title}`);
+    this.eventDate.set(
+      `${this.datePipe.transform(clickInfo.event.start, 'M/d/yy, HH:mm')} -  ${this.datePipe.transform(
+        clickInfo.event.end,
+        'M/d/yy, HH:mm'
+      )}`
+    );
+    this.eventId.set(String(clickInfo.event.id));
+    this.updateModalOpen.set(true);
+    this.clickInfo.set(clickInfo);
   }
-
-  handleEventUpdate(info: any): void {
-    if (!info || !info.event) {
+  handleEventUpdate(info: EventDropArg | any): void {
+    if (!info || !(info as any).event) {
       this.showErrorModal('Invalid event update info.');
       return;
     }
+
     const toLocalISOString = (date: Date | null): string => {
       if (!date) return '';
       const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
       return local.toISOString().slice(0, 19); // 'YYYY-MM-DDTHH:mm:ss'
     };
 
+    const evt = (info as any).event;
     const updatedEvent = {
-      id: info.event.id,
-      title: info.event.title,
-      start: toLocalISOString(info.event.start),
-      end: toLocalISOString(info.event.end),
-      allDay: info.event.allDay,
+      id: evt.id,
+      title: evt.title,
+      start: toLocalISOString(evt.start),
+      end: toLocalISOString(evt.end),
+      allDay: evt.allDay,
     };
 
     if (!this.useLocalStorage) {
-      this.updateEventWithApi(info, updatedEvent);
+      this.updateEventWithApi(info as any, updatedEvent);
     } else {
       this.updateEventWithLocalstorage(updatedEvent);
     }
@@ -138,9 +145,9 @@ export class Calender {
 
   // Modal action handlers
   onCreate(value: string): void {
-    if (this.selectInfo) {
-      const selectInfo = this.selectInfo;
-      const calendarApi = selectInfo.view.calendar;
+  const select = this.selectInfo();
+    if (select) {
+      const calendarApi = select.view.calendar;
       const title = value.trim();
       if (!title || title.length > 20) {
         this.showErrorModal('Event title is required and must be 20 characters or less.');
@@ -150,9 +157,9 @@ export class Calender {
       const Event: Ievent = {
         id: 0, // Placeholder, actual ID will be set by backend or local storage function
         title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay,
+        start: select.startStr,
+        end: select.endStr,
+        allDay: select.allDay,
       };
 
       if (!this.useLocalStorage) {
@@ -165,24 +172,26 @@ export class Calender {
   }
 
   onDelete(): void {
-    if (this.clickInfo && this.clickInfo.event) {
+    const click = this.clickInfo();
+    if (click && click.event) {
       if (!this.useLocalStorage) {
-        this.deleteEventWithApi(this.eventId);
+        this.deleteEventWithApi(this.eventId());
       } else {
-        this.deleteEventWithLocalstorage(this.eventId);
+        this.deleteEventWithLocalstorage(this.eventId());
       }
     }
     this.closeModal();
   }
 
   onUpdate(value: string): void {
-    if (this.clickInfo && this.clickInfo.event) {
+    const click = this.clickInfo();
+    if (click && click.event) {
       if (!value || value.trim() === '' || value.length > 20) {
         this.showErrorModal('Event title is required and must be 20 characters or less.');
         return;
       }
-      this.clickInfo.event.setProp('title', value.trim());
-      this.handleEventUpdate(this.clickInfo);
+      click.event.setProp('title', value.trim());
+      this.handleEventUpdate(click as any);
       this.closeModal();
     }
   }
@@ -196,8 +205,8 @@ export class Calender {
           title: e.title,
           start: e.start,
           end: e.end,
-          allDay: e.allDay ?? e.allday,
-        }));
+          allDay: e.allDay ?? (e as any).allday,
+        })) as EventInput[];
       },
       error: () => {
         if (!this.useLocalStorage) {
@@ -217,10 +226,10 @@ export class Calender {
       start: e.start,
       end: e.end,
       allDay: e.allDay ?? e.allday,
-    }));
+    })) as EventInput[];
   }
 
-  createEventWithApi(event: Ievent, calendarApi: any): void {
+  createEventWithApi(event: Ievent, calendarApi?: CalendarApi): void {
     this.calenderService
       .createEvent({
         title: event.title,
@@ -246,7 +255,7 @@ export class Calender {
       });
   }
 
-  createEventWithLocalstorage(event: any, calendarApi: any): void {
+  createEventWithLocalstorage(event: any, calendarApi?: CalendarApi): void {
     event.id = crypto.randomUUID();
     const createdEvent = this.calenderService.createEventLocal(event);
     if (calendarApi) {
@@ -264,7 +273,7 @@ export class Calender {
     this.calenderService.updateEvent(Number(updatedEvent.id), updatedEvent).subscribe({
       error: () => {
         this.showErrorModal('Failed to update event. Please try again.');
-        if (info.revert) info.revert();
+        if (info && typeof (info as any).revert === 'function') (info as any).revert();
       },
     });
   }
@@ -276,8 +285,11 @@ export class Calender {
   deleteEventWithApi(eventId: string): void {
     this.calenderService.deleteEvent(Number(eventId)).subscribe({
       next: () => {
-        this.clickInfo.event.remove();
-        this.clickInfo = null;
+        const click = this.clickInfo();
+        if (click && click.event) {
+          click.event.remove();
+        }
+        this.clickInfo.set(null);
       },
       error: () => {
         this.showErrorModal('Failed to delete event. Please try again.');
@@ -287,35 +299,35 @@ export class Calender {
 
   deleteEventWithLocalstorage(eventId: string): void {
     this.calenderService.deleteEventLocal(eventId);
-    if (this.clickInfo && this.clickInfo.event) {
-      this.clickInfo.event.remove();
-      this.clickInfo = null;
+    const click = this.clickInfo();
+    if (click && click.event) {
+      click.event.remove();
     }
+    this.clickInfo.set(null);
   }
 
   // Modal control methods
   showErrorModal(message: string): void {
-    this.title = message;
-    this.errorModalOpen = true;
+    this.title.set(message);
+    this.errorModalOpen.set(true);
   }
 
   showLocalStorageErrorModal(): void {
-    this.title = 'API Error - try using Local Storage';
-    this.localStorageErrorModalOpen = true;
+    this.title.set('API Error - try using Local Storage');
+    this.localStorageErrorModalOpen.set(true);
   }
 
   closeModal(): void {
-    this.selectInfo = null;
-    this.eventId = '';
-    this.eventDate = '';
-    this.inputTitle = '';
-    this.createModalOpen = false;
-    this.updateModalOpen = false;
-    this.errorModalOpen = false;
-    this.localStorageErrorModalOpen = false;
+    this.selectInfo.set(null);
+    this.eventId.set('');
+    this.eventDate.set('');
+    this.inputTitle.set('');
+    this.createModalOpen.set(false);
+    this.updateModalOpen.set(false);
+    this.errorModalOpen.set(false);
+    this.localStorageErrorModalOpen.set(false);
   }
 
-  // Toggle between API and Local Storage
   storage = 'Backend Server';
   toggleLocalStorage() {
     this.useLocalStorage = !this.useLocalStorage;
@@ -324,7 +336,7 @@ export class Calender {
     if (this.eventsSubscription) {
       this.eventsSubscription.unsubscribe();
     }
-    this.ngOnInit();
+    this.loadEvents();
     this.closeModal();
   }
 }

@@ -2,7 +2,7 @@
     <h3>Transactions</h3>
     <ul>
         @for (transaction of transactions(); track $index; let i = $index) {
-        <li>
+        <li class="d-flex justify-content-between align-items-center mb-2 p-2 rounded">
             <span class="title">{{ transaction.title }}</span>
             <span class="amount" [class.income]="transaction.entryType === 'income'"
                 [class.expense]="transaction.entryType === 'expense'">
@@ -10,7 +10,7 @@
             </span>
             <span class="category">{{ transaction.category }}</span>
             <span class="date">{{ transaction.date | date:'shortDate' }}</span>
-            <button (click)="DeleteTransaction(i)">Delete</button>
+            <button (click)="DeleteTransaction(i)" class="btn btn-outline-danger">Delete</button>
         </li>
         }
     </ul>

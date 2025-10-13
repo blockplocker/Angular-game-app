@@ -1,4 +1,4 @@
-<form [formGroup]="financesForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="financesForm" (ngSubmit)="onSubmit()" class="d-flex flex-column p-4 gap-3 bg-dark rounded shadow w-full max-w-md">
 
     <label for="amount">Amount</label>
     <input formControlName="amount" type="number" placeholder="Amount" maxlength="16" />
@@ -22,5 +22,5 @@
     <label for="date">Date</label>
     <input formControlName="date" type="date" />
 
-    <button type="submit">Submit</button>
+    <button type="submit" class="btn btn-outline-primary">Submit</button>
 </form>

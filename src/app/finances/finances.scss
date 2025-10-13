@@ -6,69 +6,16 @@
   font-family: 'Fira Sans', 'Segoe UI', sans-serif;
   min-height: 93vh;
 }
-
-h2 {
-  color: #90caf9;
-  text-align: center;
-  margin-top: 2rem;
-}
-
 .title {
-  text-align: center;
-  margin-top: 0.5rem;
-  margin-bottom: 1.2rem;
   background: linear-gradient(90deg, #90caf9 0%, #1976d2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-size: 2rem;
-  border-radius: 8px;
-  font-weight: 700;
   letter-spacing: 1px;
 }
-.positive {
-  color: #43a047;
-  text-align: center;
-  font-size: 2rem;
-
-  margin-bottom: 1rem;
-}
-.negative {
-  color: #e53935;
-  text-align: center;
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
 .category-summary {
-  background: #23272f;
-  border-radius: 12px;
-  box-shadow: 0 1px 6px rgba(25, 118, 210, 0.08);
   padding: 1.2rem 1.5rem;
   margin: 1.5rem auto;
   max-width: 400px;
-  color: #e3e3e3;
-}
-.category-summary h4 {
-  color: #90caf9;
-  margin-bottom: 0.5rem;
-}
-.category-summary p {
-  color: #1976d2;
-  font-weight: 600;
-  font-size: 1.1rem;
-  margin: 0;
-}
-
-.chart-container {
-  margin-top: 2rem;
-  max-width: 600px;
-  max-height: 500px;
-  margin-left: auto;
-  margin-right: auto;
-  overflow: auto;
-  background: #21242a;
-  border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(25, 118, 210, 0.1);
-  padding: 1.5rem;
 }

@@ -1,29 +1,33 @@
 <app-finance-forms (formSubmit)="onFormSubmit($event)"></app-finance-forms>
 
 <div class="balance-container">
-    <h2 class="title">Current Balance</h2>
+    <h2 class="title text-center mt-2 mb-3 fw-bold rounded ">Current Balance</h2>
     @if (balance >= 0) {
-        <h3 class="positive">{{ balance | currency }}</h3>
+    <h3 class="text-success mb-4 text-center fw-bold">{{ balance | currency }}</h3>
     } @else {
-        <h3 class="negative">{{ balance | currency }}</h3>
+    <h3 class="text-danger mb-4 text-center fw-bold">{{ balance | currency }}</h3>
     }
-    
-    <app-list-transactions [transactions]="entries" (deleteTransactionChange)="deleteEntry($event)"></app-list-transactions>
-</div>
-    
 
-<div class="chart-container">
+    <app-list-transactions [transactions]="entries"
+        (deleteTransactionChange)="deleteEntry($event)"></app-list-transactions>
+</div>
+
+<div class="p-4 shadow mt-4 mx-auto rounded bg-dark p-4 rounded" style="max-height: 500px; max-width: 600px;">
     <h3 class="title">Spending Breakdown</h3>
     <app-balance-chart [transactions]="entries"></app-balance-chart>
 </div>
 
-<div class="category-summary-container">
-    <h3 class="title">Category Summary</h3>
+<div>
+    <h3 class="title text-center">Category Summary</h3>
     @for (category of categories; track $index) {
-        <div class="category-summary">
-            <h4>{{ category }}</h4>
-            <p class="negative">Total: {{ getCategoryExpense(category) | currency }}</p>
-            
-        </div>
+    <div class="category-summary rounded bg-dark shadow">
+        <h4 class="mb-1 text-primary">{{ category }}</h4>
+        @if (getCategoryExpense(category) < 0) { <p class="m-0 text-danger mb-4 fw-bold">Total: {{
+            getCategoryExpense(category) | currency }}</p>
+            } @else {
+            <p class="m-0 text-success mb-4 fw-bold">Total: {{ getCategoryExpense(category) | currency }}</p>
+            }
+
+    </div>
     }
 </div>
