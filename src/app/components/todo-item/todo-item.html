@@ -1,5 +1,5 @@
-<div appHighlightCompletedTodo [isCompleted]="todo().completed" class="d-flex align-items-center gap-2 py-2">
+<div appHighlightCompletedTodo [isCompleted]="todo().completed" class="d-flex align-items-center gap-2 ">
     <input id="todo-{{ todo().id }}" type="checkbox" class="form-check-input ms-3" [checked]="todo().completed"
         (change)="todoclicked()" />
-    <label for="todo-{{ todo().id }}" class="form-check-label mb-0 flex-grow-1">{{ todo().title }}</label>
+    <label for="todo-{{ todo().id }}" class="form-check-label mb-0 flex-grow-1 py-2">{{ todo().title }}</label>
 </div>
