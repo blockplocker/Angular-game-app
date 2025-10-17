@@ -143,7 +143,7 @@ export class Calender {
     }
   }
 
-  // Modal action handlers
+  // Modal actions
   onCreate(value: string): void {
   const select = this.selectInfo();
     if (select) {
