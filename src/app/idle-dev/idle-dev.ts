@@ -1,5 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { ModalWrapper } from '../components/modal-wrapper/modal-wrapper';
+import { UPGRADES } from '../data/upgrades.data';
+import { AUTO_CODERS } from '../data/auto-coders.data';
+import { RANDOM_EVENTS } from '../data/random-events.data';
 
 @Component({
   selector: 'app-idle-dev',
@@ -8,10 +11,73 @@ import { ModalWrapper } from '../components/modal-wrapper/modal-wrapper';
   styleUrl: './idle-dev.scss',
 })
 export class IdleDev {
-  // Programming Journey
-  //   Start as a beginner coder.
-  // Learn languages, build projects, and gain followers.
-  // Upgrade IDEs, frameworks, and productivity tools.
+ getAutoCoderCost(coder: any) {
+    return Math.floor(coder.baseCost * Math.pow(1.15, this.autoCoders()[coder.id] || 0));
+  }
+  autoCodersList = AUTO_CODERS;
+  autoCoders = signal<{ [id: number]: number }>({}); // id -> count
+
+  get autoCodersOwned() {
+    return this.autoCodersList.map(c => ({
+      ...c,
+      count: this.autoCoders()[c.id] || 0,
+      cost: Math.floor(c.baseCost * Math.pow(1.15, this.autoCoders()[c.id] || 0)),
+      cps: c.baseCps * (this.autoCoders()[c.id] || 0)
+    }));
+  }
+
+  // Show all owned auto coders and the next one available
+  get visibleAutoCoders() {
+    const owned = this.autoCoders();
+    let bestOwnedId = 0;
+    for (let i = this.autoCodersList.length - 1; i >= 0; i--) {
+      if (owned[this.autoCodersList[i].id] && owned[this.autoCodersList[i].id] > 0) {
+        bestOwnedId = this.autoCodersList[i].id;
+        break;
+      }
+    }
+    // All owned auto coders
+    const ownedCoders = this.autoCodersList.filter(c => owned[c.id] && owned[c.id] > 0);
+    // The next one above the best owned
+    const nextId = bestOwnedId + 1;
+    const nextCoder = this.autoCodersList.find(c => c.id === nextId);
+    // Combine owned and next (if not already owned)
+    return nextCoder ? [...ownedCoders, nextCoder] : ownedCoders;
+  }
+
+  buyAutoCoder(coder: any) {
+    const owned = this.autoCoders()[coder.id] || 0;
+    const cost = Math.floor(coder.baseCost * Math.pow(1.15, owned));
+    if (this.Money() >= cost) {
+      this.Money.update(m => m - cost);
+      this.autoCoders.update(ac => ({ ...ac, [coder.id]: owned + 1 }));
+    }
+  }
+
+  get totalAutoCps() {
+    return this.autoCodersOwned.reduce((sum, c) => sum + c.cps, 0);
+  }
+
+  autoCoderInterval: any;
+
+  startAutoCoders() {
+    if (this.autoCoderInterval) return;
+    this.autoCoderInterval = setInterval(() => {
+      const cps = this.totalAutoCps * this.MoneyMultiplier();
+      if (cps > 0) {
+        this.Money.update(m => Number((m + cps / 2).toFixed(1)));
+        this.LinesOfCode.update(l => Math.floor(l + cps / 2));
+      }
+    }, 500);
+  }
+
+  stopAutoCoders() {
+    if (this.autoCoderInterval) {
+      clearInterval(this.autoCoderInterval);
+      this.autoCoderInterval = null;
+    }
+  }
+
   localStorageKey = 'idle-dev-game-state';
 
   Money = signal<number>(0);
@@ -24,9 +90,11 @@ export class IdleDev {
 
   ngOnInit() {
     this.loadGameState();
+    this.startAutoCoders();
   }
   ngOnDestroy() {
     this.saveGameState();
+    this.stopAutoCoders();
   }
 
   saveGameState() {
@@ -35,11 +103,10 @@ export class IdleDev {
       MoneyMultiplier: this.MoneyMultiplier(),
       LinesOfCode: this.LinesOfCode(),
       DevLevel: this.DevLevel(),
-      ownedUpgrades: this.ownedUpgrades()
+      ownedUpgrades: this.ownedUpgrades(),
+      autoCoders: this.autoCoders()
     };
-
     localStorage.setItem(this.localStorageKey, JSON.stringify(gameState));
-
     this.IsSaveModalOpen.set(true);
   }
   loadGameState() {
@@ -51,6 +118,7 @@ export class IdleDev {
       this.LinesOfCode.set(gameState.LinesOfCode);
       this.DevLevel.set(gameState.DevLevel);
       this.ownedUpgrades.set(gameState.ownedUpgrades);
+      if (gameState.autoCoders) this.autoCoders.set(gameState.autoCoders);
     }
   }
 
@@ -64,27 +132,23 @@ export class IdleDev {
   get availableUpgrades() {
     return this.upgrades().filter(
       u => !this.ownedUpgrades().includes(u.id)
-    );
+    ).slice(0, 3);
   }
 
-  upgrades = signal([
-    {id: 1, name: 'Better IDE', cost: 10 , effect: () => this.MoneyMultiplier.update((mult) => mult * 2) },
-    {id: 2, name: 'Faster Computer', cost: 50, effect: () => this.MoneyMultiplier.update((mult) => mult * 1.2) },
-    {id: 3, name: 'Coffee Machine', cost: 100, effect: () => this.MoneyMultiplier.update((mult) => mult * 1.3) },
-  ]);
+  upgrades = signal(UPGRADES.map(upg => ({
+    ...upg,
+    effect: () => upg.effect(this)
+  })));
 
-  randomEvents = signal([
-    { name: 'You find online that you can download RAM', effect: () => this.MoneyMultiplier.update((mult) => mult + 0.2) },
-    { name: 'Code Review', effect: () => this.MoneyMultiplier.update((mult) => mult * 1.1) },
-    { name: 'Bug Found', effect: () => this.Money.update((money) => money - 0.1 * money) },
-    { name: 'Productivity Boost', effect: () => this.MoneyMultiplier.update((mult) => mult * 1.2) },
-  ]);
+  randomEvents = signal(RANDOM_EVENTS.map(ev => ({
+    ...ev,
+    effect: () => ev.effect(this)
+  })));
 
   Code() {
     console.log("Coding...");
-    
-    this.Money.update((money) => money + 1 * this.MoneyMultiplier());
-    this.LinesOfCode.update((lines) => lines + 1);
+    this.Money.update((money) => Number((money + 1 * this.MoneyMultiplier()).toFixed(1)));
+    this.LinesOfCode.update((lines) => Math.floor(lines + 1));
   }
   buyUpgrade(upgrade: any) {
     if (this.Money() >= upgrade.cost) {
@@ -123,6 +187,7 @@ export class IdleDev {
     this.MoneyMultiplier.set(1);
     this.DevLevel.set(1);
     this.ownedUpgrades.set([]);
+    this.autoCoders.set({});
     // localStorage.removeItem(this.localStorageKey);
   }
 }
