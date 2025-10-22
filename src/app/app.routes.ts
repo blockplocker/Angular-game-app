@@ -64,6 +64,13 @@ export const routes: Routes = [
       return import('./calender/calender').then((m) => m.Calender);
     },
   },
+  {
+    path: 'idle-dev',
+    pathMatch: 'full',
+    loadComponent() {
+      return import('./idle-dev/idle-dev').then((m) => m.IdleDev);
+    },
+  },
 
 
 ];
