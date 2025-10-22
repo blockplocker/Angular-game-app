@@ -1,21 +1,22 @@
 import { Upgrade } from '../interfaces/idle-dev/upgrade.interface';
 
 export const UPGRADES: Upgrade[] = [
+  // Early game upgrades
   {
     id: 1,
     name: 'Better IDE',
-    cost: 6 ,
+    cost: 6,
     effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 2),
   },
   {
     id: 2,
-    name: 'Better IDE',
-    cost: 10,
-    effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 2),
+    name: 'Mechanical Keyboard',
+    cost: 12,
+    effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 1.5),
   },
   {
     id: 3,
-    name: 'AI subscription',
+    name: 'AI Subscription',
     cost: 30,
     effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 2),
   },
@@ -31,7 +32,6 @@ export const UPGRADES: Upgrade[] = [
     cost: 100,
     effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 1.3),
   },
-  // Money Multiplier Upgrades
   {
     id: 6,
     name: 'Standing Desk',
@@ -74,5 +74,54 @@ export const UPGRADES: Upgrade[] = [
     cost: 100000,
     effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 1.5),
   },
-  
+
+  // New upgrades for more progression
+  {
+    id: 13,
+    name: 'Cloud Storage',
+    cost: 250000,
+    effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 1.3),
+  },
+  {
+    id: 14,
+    name: 'Remote Work Setup',
+    cost: 500000,
+    effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 1.35),
+  },
+  {
+    id: 15,
+    name: 'DevOps Automation',
+    cost: 1200000,
+    effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 1.4),
+  },
+  {
+    id: 16,
+    name: 'VR Workspace',
+    cost: 3000000,
+    effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 1.5),
+  },
+  {
+    id: 17,
+    name: 'Personal Assistant Bot',
+    cost: 8000000,
+    effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 1.6),
+  },
+  {
+    id: 18,
+    name: 'Automated Testing Suite',
+    cost: 20000000,
+    effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 1.7),
+  },
+  {
+    id: 19,
+    name: 'Quantum Cloud Compute',
+    cost: 100000000,
+    effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 2),
+  },
+  {
+    id: 20,
+    name: 'AI Project Manager',
+    cost: 500000000,
+    effect: (ctx) => ctx.MoneyMultiplier.update((mult: number) => mult * 2.5),
+  },
 ];

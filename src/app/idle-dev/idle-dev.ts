@@ -89,11 +89,11 @@ export class IdleDev {
   }
 
   public getLevelUpCost(level: number, index: number): number {
-    return 50 * Math.pow(2, level - 1) * (1 + index);
+    return 75 * Math.pow(1.5, level - 1) * (1 + index * 1.1);
   }
 
   public getCoderCps(level: number, index: number): number {
-    return Math.pow(1.4, level - 1) * (1.5 + index);
+    return Math.pow(1.2, level - 1) * (1.2 + index * 0.8);
   }
 
   public get totalAutoCps(): number {
