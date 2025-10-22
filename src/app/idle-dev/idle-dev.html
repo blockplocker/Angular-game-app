@@ -46,24 +46,30 @@
         <div class="col-12">
             <h5 class="mb-2">Employees</h5>
             <div class="d-flex flex-row flex-wrap gap-2">
-                <ng-container *ngFor="let coder of autoCoders(); let idx = index">
+                @for (coder of autoCoders(); track $index; let idx = $index)
+                {
                 <div class="card p-2 text-center" style="width: 160px; min-width: 120px;">
                     <div class="card-body p-2">
-                        <div class="card-title mb-1" style="font-size: 1rem;">{{ coder.name || 'Employee #' + (idx + 1) }}</div>
+                        <div class="card-title mb-1" style="font-size: 1rem;">{{ coder.name || 'Employee #' + (idx + 1)
+                            }}</div>
                         <div class="mb-1 small">Level: <span class="fw-bold">{{ coder.level }}</span></div>
-                        <div class="mb-1 small">CPS: <span class="fw-bold">{{ getCoderCps(coder.level, idx) | number:'1.1-2' }}</span></div>
-                        <button class="btn btn-outline-secondary btn-sm w-100 mb-1" (click)="levelUpEmployee(idx)" [disabled]="Money() < getLevelUpCost(coder.level, idx)">
+                        <div class="mb-1 small">CPS: <span class="fw-bold">{{ getCoderCps(coder.level, idx) |
+                                number:'1.1-2' }}</span></div>
+                        <button class="btn btn-outline-secondary btn-sm w-100 mb-1" (click)="levelUpEmployee(idx)"
+                            [disabled]="Money() < getLevelUpCost(coder.level, idx)">
                             Level Up (${{ getLevelUpCost(coder.level, idx).toFixed(0) }})
                         </button>
                     </div>
                 </div>
-                </ng-container>
+                }
                 <div class="card p-2 text-center border-success" style="width: 160px; min-width: 120px;">
                     <div class="card-body p-2">
                         <div class="card-title mb-1" style="font-size: 1rem;">Hire Employee</div>
                         <div class="mb-1 small">Starts at Level 1</div>
-                        <div class="mb-1 small">CPS: <span class="fw-bold">{{ getCoderCps(1, autoCoders().length) | number:'1.1-2' }}</span></div>
-                        <button class="btn btn-outline-success btn-sm w-100" (click)="hireEmployee()" [disabled]="Money() < getHireCost()">
+                        <div class="mb-1 small">CPS: <span class="fw-bold">{{ getCoderCps(1, autoCoders().length) |
+                                number:'1.1-2' }}</span></div>
+                        <button class="btn btn-outline-success btn-sm w-100" (click)="hireEmployee()"
+                            [disabled]="Money() < getHireCost()">
                             Hire (${{ getHireCost().toFixed(0) }})
                         </button>
                     </div>

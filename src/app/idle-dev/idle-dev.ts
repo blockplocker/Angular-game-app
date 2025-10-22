@@ -1,9 +1,8 @@
 import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ModalWrapper } from '../components/modal-wrapper/modal-wrapper';
 import { UPGRADES } from '../data/upgrades.data';
-// import { AUTO_CODERS } from '../data/auto-coders.data';
 import { RANDOM_EVENTS } from '../data/random-events.data';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-idle-dev',
@@ -12,10 +11,45 @@ import { CommonModule } from '@angular/common';
   styleUrl: './idle-dev.scss',
 })
 export class IdleDev {
-  autoCoders = signal<Array<{ level: number, name?: string }>>([]);
+  public Money = signal<number>(0);
+  public MoneyMultiplier = signal<number>(1);
+  public LinesOfCode = signal<number>(0);
+  public DevLevel = signal<number>(1);
+  public autoCoders = signal<Array<{ level: number; name?: string }>>([]);
+  public ownedUpgrades = signal<Array<number>>([]);
+  public progress = signal<number>(0);
+  public progressRunning = signal<boolean>(false);
+  public IsSaveModalOpen = signal<boolean>(false);
 
-  // Get employee name based on level
-  getEmployeeName(level: number): string {
+  private readonly localStorageKey = 'idle-dev-game-state';
+
+  public upgrades = signal(
+    UPGRADES.map((upg) => ({
+      ...upg,
+      effect: () => upg.effect(this),
+    }))
+  );
+
+  public randomEvents = signal(
+    RANDOM_EVENTS.map((ev) => ({
+      ...ev,
+      effect: () => ev.effect(this),
+    }))
+  );
+
+  private autoCoderInterval: any;
+
+  ngOnInit() {
+    this.loadGameState();
+    this.startAutoCoders();
+  }
+
+  ngOnDestroy() {
+    this.saveGameState();
+    this.stopAutoCoders();
+  }
+
+  public getEmployeeName(level: number): string {
     if (level >= 20) return 'Principal Engineer';
     if (level >= 15) return 'Lead Developer';
     if (level >= 10) return 'Senior Developer';
@@ -24,20 +58,15 @@ export class IdleDev {
     return 'Intern';
   }
 
-  // Hire a new employee (starts at level 1)
-  hireEmployee() {
+  public hireEmployee(): void {
     const cost = this.getHireCost();
     if (this.Money() >= cost) {
       this.Money.update((m) => m - cost);
-      this.autoCoders.update((list) => [
-        ...list,
-        { level: 1, name: this.getEmployeeName(1) }
-      ]);
+      this.autoCoders.update((list) => [...list, { level: 1, name: this.getEmployeeName(1) }]);
     }
   }
 
-  // Level up an employee (by index)
-  levelUpEmployee(index: number) {
+  public levelUpEmployee(index: number): void {
     const coder = this.autoCoders()[index];
     const cost = this.getLevelUpCost(coder.level, index);
     if (this.Money() >= cost) {
@@ -48,35 +77,32 @@ export class IdleDev {
         newList[index] = {
           ...newList[index],
           level: newLevel,
-          name: this.getEmployeeName(newLevel)
+          name: this.getEmployeeName(newLevel),
         };
         return newList;
       });
     }
   }
 
-  getHireCost() {
+  public getHireCost(): number {
     return 100 * Math.pow(1.5, this.autoCoders().length);
   }
 
-  getLevelUpCost(level: number, index: number) {
-    return 50 * Math.pow(2, level - 1) * (1 + index * 1);
+  public getLevelUpCost(level: number, index: number): number {
+    return 50 * Math.pow(2, level - 1) * (1 + index);
   }
 
-
-  getCoderCps(level: number, index: number) {
+  public getCoderCps(level: number, index: number): number {
     return Math.pow(1.4, level - 1) * (1.5 + index);
   }
 
-  get totalAutoCps() {
+  public get totalAutoCps(): number {
     const coders = this.autoCoders();
     if (!Array.isArray(coders)) return 0;
     return coders.reduce((sum, c, i) => sum + this.getCoderCps(c.level, i), 0);
   }
 
-  autoCoderInterval: any;
-
-  startAutoCoders() {
+  private startAutoCoders(): void {
     if (this.autoCoderInterval) return;
     this.autoCoderInterval = setInterval(() => {
       const cps = this.totalAutoCps * this.MoneyMultiplier();
@@ -87,33 +113,14 @@ export class IdleDev {
     }, 500);
   }
 
-  stopAutoCoders() {
+  private stopAutoCoders(): void {
     if (this.autoCoderInterval) {
       clearInterval(this.autoCoderInterval);
       this.autoCoderInterval = null;
     }
   }
 
-  localStorageKey = 'idle-dev-game-state';
-
-  Money = signal<number>(0);
-  MoneyMultiplier = signal<number>(1);
-  LinesOfCode = signal<number>(0);
-  DevLevel = signal<number>(1);
-
-  progress = signal<number>(0);
-  progressRunning = signal<boolean>(false);
-
-  ngOnInit() {
-    this.loadGameState();
-    this.startAutoCoders();
-  }
-  ngOnDestroy() {
-    this.saveGameState();
-    this.stopAutoCoders();
-  }
-
-  saveGameState() {
+  public saveGameState(): void {
     const gameState = {
       Money: this.Money(),
       MoneyMultiplier: this.MoneyMultiplier(),
@@ -125,7 +132,8 @@ export class IdleDev {
     localStorage.setItem(this.localStorageKey, JSON.stringify(gameState));
     this.IsSaveModalOpen.set(true);
   }
-  loadGameState() {
+
+  public loadGameState(): void {
     const savedState = localStorage.getItem(this.localStorageKey);
     if (savedState) {
       const gameState = JSON.parse(savedState);
@@ -134,48 +142,21 @@ export class IdleDev {
       this.LinesOfCode.set(gameState.LinesOfCode);
       this.DevLevel.set(gameState.DevLevel);
       this.ownedUpgrades.set(gameState.ownedUpgrades);
-      // Defensive: ensure autoCoders is always an array
-      if (Array.isArray(gameState.autoCoders)) {
-        this.autoCoders.set(gameState.autoCoders);
-      } else {
-        this.autoCoders.set([]);
-      }
+      this.autoCoders.set(Array.isArray(gameState.autoCoders) ? gameState.autoCoders : []);
     }
   }
 
-  IsSaveModalOpen = signal<boolean>(false);
-  closeModal() {
+  public closeModal(): void {
     this.IsSaveModalOpen.set(false);
   }
 
-  ownedUpgrades = signal<Array<number>>([]);
-
-  get availableUpgrades() {
+  public get availableUpgrades() {
     return this.upgrades()
       .filter((u) => !this.ownedUpgrades().includes(u.id))
       .slice(0, 3);
   }
 
-  upgrades = signal(
-    UPGRADES.map((upg) => ({
-      ...upg,
-      effect: () => upg.effect(this),
-    }))
-  );
-
-  randomEvents = signal(
-    RANDOM_EVENTS.map((ev) => ({
-      ...ev,
-      effect: () => ev.effect(this),
-    }))
-  );
-
-  Code() {
-    console.log('Coding...');
-    this.Money.update((money) => Number((money + 1 * this.MoneyMultiplier()).toFixed(1)));
-    this.LinesOfCode.update((lines) => Math.floor(lines + 1));
-  }
-  buyUpgrade(upgrade: any) {
+  public buyUpgrade(upgrade: any): void {
     if (this.Money() >= upgrade.cost) {
       this.Money.update((money) => money - upgrade.cost);
       this.ownedUpgrades.update((owned) => [...owned, upgrade.id]);
@@ -183,7 +164,12 @@ export class IdleDev {
     }
   }
 
-  startProgress(durationMs = 3000) {
+  public Code(): void {
+    this.Money.update((money) => Number((money + 1 * this.MoneyMultiplier()).toFixed(1)));
+    this.LinesOfCode.update((lines) => Math.floor(lines + 1));
+  }
+
+  public startProgress(durationMs = 3000): void {
     if (this.progressRunning()) return; // already running
     this.progressRunning.set(true);
     this.progress.set(0);
@@ -206,7 +192,7 @@ export class IdleDev {
     requestAnimationFrame(tick);
   }
 
-  reset() {
+  public reset(): void {
     this.Money.set(0);
     this.LinesOfCode.set(0);
     this.MoneyMultiplier.set(1);
