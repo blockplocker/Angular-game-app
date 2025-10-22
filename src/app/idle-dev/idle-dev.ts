@@ -20,33 +20,69 @@ export class IdleDev {
   public progress = signal<number>(0);
   public progressRunning = signal<boolean>(false);
   public IsSaveModalOpen = signal<boolean>(false);
+  public lastRandomEvent = signal<string | null>(null);
+  public lastRandomEventDescription = signal<string | null>(null);
+  public isRandomEventModalOpen = signal<boolean>(false);
 
   private readonly localStorageKey = 'idle-dev-game-state';
-
+  
   public upgrades = signal(
     UPGRADES.map((upg) => ({
       ...upg,
       effect: () => upg.effect(this),
     }))
   );
-
+  
   public randomEvents = signal(
     RANDOM_EVENTS.map((ev) => ({
       ...ev,
       effect: () => ev.effect(this),
     }))
   );
-
+  
+  private randomEventTimeout: any;
   private autoCoderInterval: any;
 
   ngOnInit() {
     this.loadGameState();
     this.startAutoCoders();
+    this.scheduleRandomEvent();
   }
 
   ngOnDestroy() {
     this.saveGameState();
     this.stopAutoCoders();
+    if (this.randomEventTimeout) {
+      clearTimeout(this.randomEventTimeout);
+    }
+  }
+  // Schedules the next random event at a random interval (30-60 seconds)
+  private scheduleRandomEvent(): void {
+    const min = 30000; // 30 seconds
+    const max = 60000; // 60 seconds
+    const delay = Math.floor(Math.random() * (max - min + 1)) + min;
+    this.randomEventTimeout = setTimeout(() => {
+      this.triggerRandomEvent();
+      this.scheduleRandomEvent();
+    }, delay);
+  }
+
+
+  public triggerRandomEvent(): void {
+    const events = this.randomEvents();
+    if (!events.length) return;
+    const idx = Math.floor(Math.random() * events.length);
+    const event = events[idx];
+    event.effect();
+    this.lastRandomEvent.set(event.name);
+    this.lastRandomEventDescription.set(event.description);
+    this.isRandomEventModalOpen.set(true);
+  }
+
+  public closeRandomEventModal(): void {
+    this.isRandomEventModalOpen.set(false);
+    this.lastRandomEvent.set(null);
+    this.lastRandomEventDescription.set(null);
   }
 
   public getEmployeeName(level: number): string {
