@@ -27,20 +27,20 @@
             <div class="d-flex flex-column align-items-end">
                 <span class="fw-bold">Lines of Code: <span class="text-primary">{{ LinesOfCode().toFixed(0)
                         }}</span></span>
-                <span class="fw-bold">Money: <span class="text-success">${{ Money().toFixed(2) }}</span></span>
+                <span class="fw-bold">Money: <span class="text-success">${{ Money().toFixed(0) }}</span></span>
                 <span class="fw-bold">MoneyMultiplier: <span class="text-success">x{{ MoneyMultiplier().toFixed(2)
                         }}</span></span>
             </div>
         </div>
     </div>
-    
+
     <div class="row mb-4">
         <div class="col-12">
             <h5 class="mb-2">Upgrades</h5>
             <div class="d-flex flex-row flex-wrap gap-2">
                 @for (upgrade of availableUpgrades; track $index) {
-                    <div class="card p-2 text-center" style="width: 120px; min-width: 100px;">
-                        <div class="card-body p-2">
+                <div class="card p-2 text-center" style="width: 120px; min-width: 100px;">
+                    <div class="card-body p-2">
                         <div class="card-title mb-1" style="font-size: 1rem;">{{ upgrade.name }}</div>
                         <button class="btn btn-outline-success btn-sm w-100" (click)="buyUpgrade(upgrade)"
                             [disabled]="Money() < upgrade.cost">
@@ -53,42 +53,6 @@
         </div>
     </div>
 
-    <!-- <div class="row mb-4">
-        <div class="col-12">
-            <h5 class="mb-2">Employees</h5>
-            <div class="d-flex flex-row flex-wrap gap-2">
-                @for (coder of autoCoders(); track $index; let idx = $index)
-                {
-                <div class="card p-2 text-center" style="width: 160px; min-width: 120px;">
-                    <div class="card-body p-2">
-                        <div class="card-title mb-1" style="font-size: 1rem;">{{ coder.name || 'Employee #' + (idx + 1)
-                            }}</div>
-                        <div class="mb-1 small">Level: <span class="fw-bold">{{ coder.level }}</span></div>
-                        <div class="mb-1 small">CPS: <span class="fw-bold">{{ getCoderCps(coder.level, idx) |
-                                number:'1.1-2' }}</span></div>
-                        <button class="btn btn-outline-secondary btn-sm w-100 mb-1" (click)="levelUpEmployee(idx)"
-                            [disabled]="Money() < getLevelUpCost(coder.level, idx)">
-                            Level Up (${{ getLevelUpCost(coder.level, idx).toFixed(0) }})
-                        </button>
-                    </div>
-                </div>
-                }
-                <div class="card p-2 text-center border-success" style="width: 160px; min-width: 120px;">
-                    <div class="card-body p-2">
-                        <div class="card-title mb-1" style="font-size: 1rem;">Hire Employee</div>
-                        <div class="mb-1 small">Starts at Level 1</div>
-                        <div class="mb-1 small">CPS: <span class="fw-bold">{{ getCoderCps(1, autoCoders().length) |
-                                number:'1.1-2' }}</span></div>
-                        <button class="btn btn-outline-success btn-sm w-100" (click)="hireEmployee()"
-                            [disabled]="Money() < getHireCost()">
-                            Hire (${{ getHireCost().toFixed(0) }})
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
     <div class="row mb-4">
         <div class="col-12">
             <h5 class="mb-2">Agents</h5>
@@ -99,14 +63,13 @@
                         <div class="card-title mb-1" style="font-size: 1.1rem;">{{ agent.name || 'Agent #' + ($index +
                             1) }}</div>
                         <div class="mb-1 small">Level: <span class="fw-bold">{{ agent.level }}</span></div>
-                        <div class="mb-1 small">CPS: <span class="fw-bold">{{ getCoderCps(agent.level, $index) |
-                                number:'1.1-2' }}</span></div>
-                        <button class="btn btn-outline-secondary btn-sm w-100 mb-1" (click)="levelUpEmployee($index)"
-                        [disabled]="Money() < getLevelUpCost(agent.level, $index)">
+                        <div class="mb-1 small">Earn: <span class="fw-bold">${{ getAgentMoneyGain(agent) }}</span></div>
+                        <button class="btn btn-outline-secondary btn-sm w-100 mb-1" (click)="levelUpAgent($index)"
+                            [disabled]="Money() < getLevelUpCost(agent.level, $index)">
                             Level Up (${{ getLevelUpCost(agent.level, $index).toFixed(0) }})
                         </button>
                         @if (getBarById(agent.id)) {
-                            <div class="progress mt-2" role="progressbar" aria-label="Progress"
+                        <div class="progress mt-2" role="progressbar" aria-label="Progress"
                             aria-valuenow="{{getBarById(agent.id)?.progress}}" aria-valuemin="0" aria-valuemax="100"
                             style="height: 20px;">
                             <div class="progress-bar bg-info" [style.width.%]="getBarById(agent.id)?.progress"
@@ -115,8 +78,8 @@
                             </div>
                         </div>
                         }
-                        <button class="btn btn-outline-primary btn-sm w-100 mt-2"
-                            (click)="startProgress(agent.id, 2000)" [disabled]="getBarById(agent.id)?.running">
+                        <button class="btn btn-outline-primary btn-sm w-100 mt-2" (click)="startProgress(agent.id)"
+                            [disabled]="getBarById(agent.id)?.running">
                             @if (getBarById(agent.id)?.running) {
                             In Progress
                             } @else {
@@ -129,7 +92,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-12 d-flex gap-2 justify-content-center">
             <button class="btn btn-primary" (click)="startProgress(0, 2000)">Code</button>

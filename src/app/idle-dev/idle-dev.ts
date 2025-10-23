@@ -41,12 +41,10 @@ export class IdleDev {
   );
 
   private randomEventTimeout: any;
-  private autoCoderInterval: any;
 
   ngOnInit() {
     this.loadGameState();
-    this.startAutoCoders();
-    // this.scheduleRandomEvent();
+    // this.scheduleRandomEvent();   // Disabled for development purposes
     this.agents.update((bars) => [
       ...bars,
       {
@@ -76,7 +74,7 @@ export class IdleDev {
         name: 'Build Feature C',
         description: '',
         level: 1,
-        moneyGeneration: 5,
+        moneyGeneration: 20,
         runningTime: 10000,
         running: false,
         isAutoRunning: false,
@@ -87,7 +85,6 @@ export class IdleDev {
 
   ngOnDestroy() {
     this.saveGameState();
-    this.stopAutoCoders();
     if (this.randomEventTimeout) {
       clearTimeout(this.randomEventTimeout);
     }
@@ -121,7 +118,7 @@ export class IdleDev {
     this.lastRandomEventDescription.set(null);
   }
 
-  public getEmployeeName(level: number): string {
+  public getAgentName(level: number): string {
     if (level >= 20) return 'Principal Engineer';
     if (level >= 15) return 'Lead Developer';
     if (level >= 10) return 'Senior Developer';
@@ -130,26 +127,18 @@ export class IdleDev {
     return 'Intern';
   }
 
-  public hireEmployee(): void {
-    const cost = this.getHireCost();
+  public levelUpAgent(index: number): void {
+    const agent = this.agents()[index];
+    const cost = this.getLevelUpCost(agent.level, index);
     if (this.Money() >= cost) {
       this.Money.update((m) => m - cost);
-      this.autoCoders.update((list) => [...list, { level: 1, name: this.getEmployeeName(1) }]);
-    }
-  }
-
-  public levelUpEmployee(index: number): void {
-    const coder = this.autoCoders()[index];
-    const cost = this.getLevelUpCost(coder.level, index);
-    if (this.Money() >= cost) {
-      this.Money.update((m) => m - cost);
-      this.autoCoders.update((list) => {
+      this.agents.update((list) => {
         const newList = [...list];
         const newLevel = newList[index].level + 1;
         newList[index] = {
           ...newList[index],
           level: newLevel,
-          name: this.getEmployeeName(newLevel),
+          // name: this.getAgentName(newLevel),  
         };
         return newList;
       });
@@ -164,33 +153,35 @@ export class IdleDev {
     return 75 * Math.pow(1.5, level - 1) * (1 + index * 1.1);
   }
 
-  public getCoderCps(level: number, index: number): number {
-    return Math.pow(1.2, level - 1) * (1.2 + index * 0.8);
+  public getAgentMoneyGain(agent: Agent): number {
+    return Math.floor(Math.pow(1.2, agent.level - 1) * agent.moneyGeneration * this.MoneyMultiplier());
   }
 
-  public get totalAutoCps(): number {
-    const coders = this.autoCoders();
-    if (!Array.isArray(coders)) return 0;
-    return coders.reduce((sum, c, i) => sum + this.getCoderCps(c.level, i), 0);
-  }
+  // public get totalAutoCps(): number {
+  //   const coders = this.autoCoders();
+  //   if (!Array.isArray(coders)) return 0;
+  //   return coders.reduce((sum, c, i) => sum + this.getCoderCps(c.level, i), 0);
+  // }
 
-  private startAutoCoders(): void {
-    if (this.autoCoderInterval) return;
-    this.autoCoderInterval = setInterval(() => {
-      const cps = this.totalAutoCps * this.MoneyMultiplier();
-      if (cps > 0) {
-        this.Money.update((m) => Number((m + cps / 2).toFixed(1)));
-        this.LinesOfCode.update((l) => Math.floor(l + cps / 2));
-      }
-    }, 500);
-  }
+  // private autoCoderInterval: any;
 
-  private stopAutoCoders(): void {
-    if (this.autoCoderInterval) {
-      clearInterval(this.autoCoderInterval);
-      this.autoCoderInterval = null;
-    }
-  }
+  // private startAutoCoders(): void {
+  //   if (this.autoCoderInterval) return;
+  //   this.autoCoderInterval = setInterval(() => {
+  //     const cps = this.totalAutoCps * this.MoneyMultiplier();
+  //     if (cps > 0) {
+  //       this.Money.update((m) => Number((m + cps / 2).toFixed(1)));
+  //       this.LinesOfCode.update((l) => Math.floor(l + cps / 2));
+  //     }
+  //   }, 500);
+  // }
+
+  // private stopAutoCoders(): void {
+  //   if (this.autoCoderInterval) {
+  //     clearInterval(this.autoCoderInterval);
+  //     this.autoCoderInterval = null;
+  //   }
+  // }
 
   public saveGameState(): void {
     const gameState = {
@@ -222,6 +213,7 @@ export class IdleDev {
     this.IsSaveModalOpen.set(false);
   }
 
+
   public get availableUpgrades() {
     return this.upgrades()
       .filter((u) => !this.ownedUpgrades().includes(u.id))
@@ -238,24 +230,27 @@ export class IdleDev {
 
   public startProgress(id: number, durationMs = 3000): void {
     this.agents.update((bars) =>
-      bars.map((bar) => (bar.id === id ? { ...bar, running: true, value: 0 } : bar))
+      bars.map((bar) => (bar.id === id ? { ...bar, running: true, progress: 0 } : bar))
     );
     const start = performance.now();
     const tick = (now: number) => {
       const elapsed = now - start;
-      const pct = Math.min(100, (elapsed / durationMs) * 100);
+      const runningTime = this.getBarById(id)?.runningTime || durationMs;
+      const pct = Math.min(100, (elapsed / runningTime) * 100);
       this.agents.update((bars) =>
         bars.map((bar) =>
           bar.id === id
-            ? { ...bar, progress: Number(pct.toFixed(0)), running: elapsed < durationMs }
+            ? { ...bar, progress: Number(pct.toFixed(0)), running: elapsed < runningTime }
             : bar
         )
       );
-      if (elapsed < durationMs) {
+      if (elapsed < runningTime) {
         requestAnimationFrame(tick);
       } else {
         const bar = this.getBarById(id);
-        if (bar) this.getBarMoneyGain(bar);
+        if (bar){
+          this.Money.update((money) => money + this.getAgentMoneyGain(bar));
+        }
         this.agents.update((bars) =>
           bars.map((bar) =>
             bar.id === id ? { ...bar, progress: 0, running: false } : bar
@@ -271,16 +266,14 @@ export class IdleDev {
     this.LinesOfCode.update((lines) => Math.floor(lines + 1));
   }
 
-  private getBarMoneyGain(agent: Agent): void {}
-
   public getBarById(id: number) {
     return this.agents().find((bar) => bar.id === id);
   }
 
-  public canStartBar(id: number) {
-    const bar = this.getBarById(id);
-    return !!bar && !bar.running;
-  }
+  // public canStartBar(id: number) {
+  //   const bar = this.getBarById(id);
+  //   return !!bar && !bar.running;
+  // }
 
   public reset(): void {
     this.Money.set(0);
@@ -289,6 +282,6 @@ export class IdleDev {
     this.DevLevel.set(1);
     this.ownedUpgrades.set([]);
     this.autoCoders.set([]);
-    // localStorage.removeItem(this.localStorageKey);
+    // localStorage.removeItem(this.localStorageKey); // Optionally clear saved state
   }
 }
