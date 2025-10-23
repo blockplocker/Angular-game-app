@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ModalWrapper } from '../components/modal-wrapper/modal-wrapper';
 import { UPGRADES } from '../data/upgrades.data';
 import { RANDOM_EVENTS } from '../data/random-events.data';
+import { Agent } from '../interfaces/idle-dev/agent.interface';
 
 @Component({
   selector: 'app-idle-dev',
@@ -17,36 +18,71 @@ export class IdleDev {
   public DevLevel = signal<number>(1);
   public autoCoders = signal<Array<{ level: number; name?: string }>>([]);
   public ownedUpgrades = signal<Array<number>>([]);
-  public progress = signal<number>(0);
-  public progressRunning = signal<boolean>(false);
+  public agents = signal<Array<Agent>>([]);
   public IsSaveModalOpen = signal<boolean>(false);
   public lastRandomEvent = signal<string | null>(null);
   public lastRandomEventDescription = signal<string | null>(null);
   public isRandomEventModalOpen = signal<boolean>(false);
 
   private readonly localStorageKey = 'idle-dev-game-state';
-  
+
   public upgrades = signal(
     UPGRADES.map((upg) => ({
       ...upg,
       effect: () => upg.effect(this),
     }))
   );
-  
+
   public randomEvents = signal(
     RANDOM_EVENTS.map((ev) => ({
       ...ev,
       effect: () => ev.effect(this),
     }))
   );
-  
+
   private randomEventTimeout: any;
   private autoCoderInterval: any;
 
   ngOnInit() {
     this.loadGameState();
     this.startAutoCoders();
-    this.scheduleRandomEvent();
+    // this.scheduleRandomEvent();
+    this.agents.update((bars) => [
+      ...bars,
+      {
+        id : 1,
+        name: 'Build Feature A',
+        description: '',
+        level: 1,
+        moneyGeneration: 5,
+        runningTime: 2500,
+        running: false,
+        isAutoRunning: false,
+        progress: 0,
+      },
+      {
+        id: 2,
+        name: 'Build Feature B',
+        description: '',
+        level: 1,
+        moneyGeneration: 10,
+        runningTime: 5000,
+        running: false,
+        isAutoRunning: false,
+        progress: 0,
+      },
+      {
+        id: 3,
+        name: 'Build Feature C',
+        description: '',
+        level: 1,
+        moneyGeneration: 5,
+        runningTime: 10000,
+        running: false,
+        isAutoRunning: false,
+        progress: 0,
+      },
+    ]);
   }
 
   ngOnDestroy() {
@@ -56,6 +92,7 @@ export class IdleDev {
       clearTimeout(this.randomEventTimeout);
     }
   }
+
   // Schedules the next random event at a random interval (30-60 seconds)
   private scheduleRandomEvent(): void {
     const min = 30000; // 30 seconds
@@ -66,7 +103,6 @@ export class IdleDev {
       this.scheduleRandomEvent();
     }, delay);
   }
-
 
   public triggerRandomEvent(): void {
     const events = this.randomEvents();
@@ -121,7 +157,7 @@ export class IdleDev {
   }
 
   public getHireCost(): number {
-    return 100 * Math.pow(1.5, this.autoCoders().length);
+    return 100 * Math.pow(1.8, this.autoCoders().length);
   }
 
   public getLevelUpCost(level: number, index: number): number {
@@ -200,32 +236,50 @@ export class IdleDev {
     }
   }
 
+  public startProgress(id: number, durationMs = 3000): void {
+    this.agents.update((bars) =>
+      bars.map((bar) => (bar.id === id ? { ...bar, running: true, value: 0 } : bar))
+    );
+    const start = performance.now();
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const pct = Math.min(100, (elapsed / durationMs) * 100);
+      this.agents.update((bars) =>
+        bars.map((bar) =>
+          bar.id === id
+            ? { ...bar, progress: Number(pct.toFixed(0)), running: elapsed < durationMs }
+            : bar
+        )
+      );
+      if (elapsed < durationMs) {
+        requestAnimationFrame(tick);
+      } else {
+        const bar = this.getBarById(id);
+        if (bar) this.getBarMoneyGain(bar);
+        this.agents.update((bars) =>
+          bars.map((bar) =>
+            bar.id === id ? { ...bar, progress: 0, running: false } : bar
+          )
+        );
+      }
+    };
+    requestAnimationFrame(tick);
+  }
+
   public Code(): void {
     this.Money.update((money) => Number((money + 1 * this.MoneyMultiplier()).toFixed(1)));
     this.LinesOfCode.update((lines) => Math.floor(lines + 1));
   }
 
-  public startProgress(durationMs = 3000): void {
-    if (this.progressRunning()) return; // already running
-    this.progressRunning.set(true);
-    this.progress.set(0);
+  private getBarMoneyGain(agent: Agent): void {}
 
-    const start = performance.now();
-    const tick = (now: number) => {
-      const elapsed = now - start;
-      const pct = Math.min(100, (elapsed / durationMs) * 100);
-      this.progress.set(Number(pct.toFixed(0)));
+  public getBarById(id: number) {
+    return this.agents().find((bar) => bar.id === id);
+  }
 
-      if (elapsed < durationMs && this.progressRunning()) {
-        requestAnimationFrame(tick);
-      } else {
-        this.progress.set(0);
-        this.progressRunning.set(false);
-        this.Code();
-      }
-    };
-
-    requestAnimationFrame(tick);
+  public canStartBar(id: number) {
+    const bar = this.getBarById(id);
+    return !!bar && !bar.running;
   }
 
   public reset(): void {
